@@ -41,6 +41,7 @@ let read = (tls_client, fd, buffer) =>
         )
         >>= (
           _ => {
+            Logs.err(m => m("Https.read: Failing..."));
             Lwt.async(() => Tls_lwt.Unix.close(tls_client));
             Lwt.fail(exn);
           }
@@ -83,12 +84,7 @@ let send = (~meth=`GET, ~headers=[], ~body=?, uri) => {
       >>= (_ => X509_lwt.authenticator(`No_authentication_I'M_STUPID))
       >>= (
         authenticator => {
-          let client =
-            Tls.Config.client(
-              ~authenticator,
-              ~alpn_protocols=["http/1.1", "h2"],
-              (),
-            );
+          let client = Tls.Config.client(~authenticator, ());
           Tls_lwt.Unix.client_of_fd(client, ~host, socket);
         }
       )
@@ -97,19 +93,15 @@ let send = (~meth=`GET, ~headers=[], ~body=?, uri) => {
           let content_length =
             switch (body) {
             | None => "0"
-            | Some(body) => string_of_int(String.length(body))
+            | Some(body) => body |> String.length |> string_of_int
             };
 
-          let request_headers =
-            Request.create(
-              meth,
-              Uri.path_and_query(uri),
-              ~headers=
-                Headers.of_list(
-                  [("Host", host), ("Content-Length", content_length)]
-                  @ headers,
-                ),
+          let headers =
+            Headers.of_list(
+              [("Host", host), ("Content-Length", content_length)] @ headers,
             );
+          let path = uri |> Uri.path_and_query;
+          let request = Request.create(meth, path, ~headers);
 
           let (response_received, notify_response_received) = Lwt.wait();
           let response_handler = response_handler(notify_response_received);
@@ -120,7 +112,7 @@ let send = (~meth=`GET, ~headers=[], ~body=?, uri) => {
               ~writev=writev(tls_client),
               ~read=read(tls_client),
               socket,
-              request_headers,
+              request,
               ~error_handler,
               ~response_handler,
             );

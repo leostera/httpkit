@@ -1,0 +1,7 @@
+(library
+  (name server)
+  (libraries
+    fmt logs logs.lwt
+    httpaf httpaf-lwt tls tls.lwt uri
+    lwt lwt.unix
+    ))

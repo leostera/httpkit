@@ -1,0 +1,22 @@
+opam-version: "2.0"
+name: "httpkit"
+version: "0.1"
+synopsis: "A high-level http and https kit"
+maintainer: "Leandro Ostera <leandro@ostera.io>"
+authors: "Leandro Ostera <leandro@ostera.io>"
+license: "MIT"
+homepage: "https//github.com/ostera/httpkit"
+bug-reports: "https//github.com/ostera/httpkit/issues"
+depends: [
+  "fmt"
+  "logs"
+  "httpaf"
+  "httpaf-lwt"
+  "lwt"
+  "unix"
+
+  "dune" {build}
+  "reason" {build}
+]
+build: [make "build"]
+install: [make "install"]

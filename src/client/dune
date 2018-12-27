@@ -1,5 +1,6 @@
 (library
-  (name client)
+  (name httpkit_client)
+  (public_name httpkit.client)
   (libraries
     fmt logs logs.lwt
     httpaf httpaf-lwt tls tls.lwt uri

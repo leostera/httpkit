@@ -9,11 +9,12 @@ homepage: "https//github.com/ostera/httpkit"
 bug-reports: "https//github.com/ostera/httpkit/issues"
 depends: [
   "fmt"
-  "logs"
   "httpaf"
   "httpaf-lwt"
+  "logs"
   "lwt"
-  "unix"
+  "tls"
+  "uri"
 
   "dune" {build}
   "reason" {build}

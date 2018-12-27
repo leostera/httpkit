@@ -58,7 +58,7 @@ let read = (tls_client, fd, buffer) =>
     )
   );
 
-let send = (~meth=`GET, ~headers=[], ~body=?, uri) => {
+let send = (~trace=?, ~meth=`GET, ~headers=[], ~body=?, uri) => {
   open Httpaf;
   open Lwt.Infix;
   let response_handler = (notify_response_received, response, response_body) =>
@@ -85,7 +85,11 @@ let send = (~meth=`GET, ~headers=[], ~body=?, uri) => {
       >>= (
         authenticator => {
           let client = Tls.Config.client(~authenticator, ());
-          Tls_lwt.Unix.client_of_fd(client, ~host, socket);
+          switch (trace) {
+          | Some(tracer) =>
+            Tls_lwt.Unix.client_of_fd(~trace=tracer, client, ~host, socket)
+          | None => Tls_lwt.Unix.client_of_fd(client, ~host, socket)
+          };
         }
       )
       >>= (

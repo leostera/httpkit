@@ -1,5 +1,6 @@
 let send:
   (
+    ~trace: Tls_lwt.tracer=?,
     ~meth: Httpaf.Method.t=?,
     ~headers: list((string, string))=?,
     ~body: string=?,

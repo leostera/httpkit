@@ -63,11 +63,14 @@ let send = (~meth=`GET, ~headers=[], ~body=?, uri) => {
   let response_handler = (notify_response_received, response, response_body) =>
     Lwt.wakeup_later(
       notify_response_received,
-      Ok((response, response_body)),
+      (response, response_body) |> Lwt_result.return,
     );
 
   let error_handler = (notify_response_received, error) =>
-    Lwt.wakeup_later(notify_response_received, Error(error));
+    Lwt.wakeup_later(
+      notify_response_received,
+      `Connection_error(error) |> Lwt_result.fail,
+    );
 
   let host = Uri.host_with_default(uri);
   Lwt_unix.getaddrinfo(host, "443", [Unix.(AI_FAMILY(PF_INET))])
@@ -127,7 +130,9 @@ let send = (~meth=`GET, ~headers=[], ~body=?, uri) => {
           | None => ()
           };
           Body.flush(request_body, () => Body.close_writer(request_body));
-          response_received;
+
+          /* TODO(@ostera): Better idiom for this? */
+          response_received >>= (result => result);
         }
       );
     }

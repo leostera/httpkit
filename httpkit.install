@@ -1,0 +1,7 @@
+lib: [
+  "_build/install/default/lib/httpkit/META" {"META"}
+  "_build/install/default/lib/httpkit/opam" {"opam"}
+]
+bin: [
+  "_build/install/default/bin/request" {"request"}
+]

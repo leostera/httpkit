@@ -1,4 +1,4 @@
-let read_body = (response, body) => {
+let body = ((response, body)) => {
   let buffer = Buffer.create(1024);
   let (next, wakeup) = Lwt.wait();
   switch (Httpaf.Response.(response.status)) {

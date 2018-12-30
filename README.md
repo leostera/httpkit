@@ -11,10 +11,10 @@ because working directly with
 
 1. [Getting Started](#getting-started)
 2. [Principles: Server-side](#principles-server-side)
-  1. [Servers should be safe to build](#servers-should-be-safe-to-build)
-  2. [Servers should be buildable using composable parts](#servers-should-be-buildable-using-composable-parts)
-  3. [Servers should be responsive to all requests](#servers-should-be-responsive-to-all-requests)
-  4. [Servers should be fast to run](#servers-should-be-fast-to-run)
+   1. [Servers should be safe to build](#servers-should-be-safe-to-build)
+   2. [Servers should be buildable using composable parts](#servers-should-be-buildable-using-composable-parts)
+   3. [Servers should be responsive to all requests](#servers-should-be-responsive-to-all-requests)
+   4. [Servers should be fast to run](#servers-should-be-fast-to-run)
 2. [Principles: Client-side](#principles-client-side)
 
 ## Getting Started

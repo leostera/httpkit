@@ -58,7 +58,7 @@ think! 🙌🏼
 The following principles guide the server-side library:
 
 1. [Servers should be safe to build](#servers-should-be-safe-to-build)
-2. [Servers should be buildable by composable parts](#servers-should-be-buildable-by-composable-parts)
+2. [Servers should be buildable using composable parts](#servers-should-be-buildable-using-composable-parts)
 3. [Servers should be responsive to all requests](#servers-should-be-responsive-to-all-requests)
 4. [Servers should be fast to run](#servers-should-be-fast-to-run)
 
@@ -91,7 +91,7 @@ I believe that these 2 invariants will make building web servers much safer.
 
 If you manage to build a server that is not safe, **this is a bug**.
 
-### Servers should be buildable by composable parts
+### Servers should be buildable using composable parts
 
 The first thing that came to mind when thinking of composable servers was
 `connect`, of Node.js fame. The library didn't invent, but popularized the

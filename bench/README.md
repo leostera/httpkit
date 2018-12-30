@@ -1,7 +1,7 @@
-# Benchmarking `httpkit` ⚡️
+# Benchmarking HttpKit ⚡️
 
 In order to ensure that `httpkit` stays fast, here you'll find a number of small
-servers written in other languages.
+servers written in other languages to benchmark against.
 
 They should all do the same thing:
 
@@ -12,11 +12,77 @@ They will all be called with the same command:
 
 ```sh
 wrk2 \
-	--threads=12 \
-	--connections=400 \
-	--duration=30s \
-	--rate 30K
-	https://localhost:8080/bench-it-chewie!
+  --threads=12 \
+  --connections=400 \
+  --duration=30s \
+  --rate 30K
+  https://localhost:8080/bench-it-chewie!
+```
+## Results
+
+| Lang    | Lib                |   KB/s   | RPS   | Total Req |
+|---------|--------------------|----------|-------|-----------|
+| OCaml   | httpkit+httpaf+lwt | 414.17KB | 10874 |   326230  |
+| OCaml   | httpaf+lwt         | 414.76KB | 10890 |   326792  |
+| Ruby    | rack			         | 149.70KB |   806 |    24349  |
+| Node.js | stdlib http        | 591.80KB |  5179 |   155767  |
+| Golang  | stdlib http        |   0.95MB | 13314 |   399390  |
+| Python  | BaseHTTPServer     |  65.50KB |   519 |    15704  |
+
+## Details
+
+### OCaml/httpkit+httpaf+lwt
+
+```sh
+ostera/httpkit λ wrk2 --threads=12 --connections=400 --duration=30s --rate 30K http://localhost:9999/what
+Running 30s test @ http://localhost:9999/what
+  12 threads and 400 connections
+  Thread calibration: mean lat.: 3092.528ms, rate sampling interval: 11714ms
+  Thread calibration: mean lat.: 3241.606ms, rate sampling interval: 12107ms
+  Thread calibration: mean lat.: 3183.128ms, rate sampling interval: 11763ms
+  Thread calibration: mean lat.: 3235.211ms, rate sampling interval: 12009ms
+  Thread calibration: mean lat.: 3109.703ms, rate sampling interval: 11780ms
+  Thread calibration: mean lat.: 3214.701ms, rate sampling interval: 12017ms
+  Thread calibration: mean lat.: 3174.243ms, rate sampling interval: 11862ms
+  Thread calibration: mean lat.: 3067.300ms, rate sampling interval: 11575ms
+  Thread calibration: mean lat.: 3066.558ms, rate sampling interval: 11755ms
+  Thread calibration: mean lat.: 3101.464ms, rate sampling interval: 11722ms
+  Thread calibration: mean lat.: 3084.410ms, rate sampling interval: 11829ms
+  Thread calibration: mean lat.: 3075.844ms, rate sampling interval: 11444ms
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.87s     3.62s   20.76s    58.95%
+    Req/Sec     0.92k    18.58     0.95k    58.33%
+  326230 requests in 30.00s, 12.13MB read
+  Socket errors: connect 0, read 40, write 3, timeout 4
+Requests/sec:  10874.67
+Transfer/sec:    414.17KB
+```
+
+### OCaml/httpaf+lwt
+
+```sh
+ostera/httpkit λ wrk2 --threads=12 --connections=400 --duration=30s --rate 30K http://localhost:9999/what
+Running 30s test @ http://localhost:9999/what
+  12 threads and 400 connections
+  Thread calibration: mean lat.: 3103.933ms, rate sampling interval: 11304ms
+  Thread calibration: mean lat.: 3074.874ms, rate sampling interval: 11141ms
+  Thread calibration: mean lat.: 3190.094ms, rate sampling interval: 11370ms
+  Thread calibration: mean lat.: 2974.283ms, rate sampling interval: 10543ms
+  Thread calibration: mean lat.: 2987.974ms, rate sampling interval: 11091ms
+  Thread calibration: mean lat.: 2895.381ms, rate sampling interval: 10919ms
+  Thread calibration: mean lat.: 2908.596ms, rate sampling interval: 10870ms
+  Thread calibration: mean lat.: 3164.646ms, rate sampling interval: 11526ms
+  Thread calibration: mean lat.: 3000.368ms, rate sampling interval: 11182ms
+  Thread calibration: mean lat.: 3051.481ms, rate sampling interval: 11386ms
+  Thread calibration: mean lat.: 3005.150ms, rate sampling interval: 11165ms
+  Thread calibration: mean lat.: 2956.432ms, rate sampling interval: 10960ms
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.55s     3.75s   21.20s    59.01%
+    Req/Sec     0.91k    15.95     0.95k    75.00%
+  326792 requests in 30.01s, 12.15MB read
+  Socket errors: connect 0, read 97, write 4, timeout 11
+Requests/sec:  10890.16
+Transfer/sec:    414.76KB
 ```
 
 ### Ruby/Rack

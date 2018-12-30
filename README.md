@@ -52,9 +52,7 @@ Server.(
 I encourage you to read on through the Principles and let me know what you
 think! 🙌🏼
 
-## Principles
-
-### Server Principles
+## Principles: Server-side
 
 The following principles guide the server-side library:
 
@@ -69,7 +67,7 @@ Success_](https://blog.codinghorror.com/falling-into-the-pit-of-success/)),
 allow maximum code-reuse, with the guarantee that all requests will be handled,
 and should be lightning fast.
 
-#### Servers should be safe to build
+### Servers should be safe to build
 
 Have you ever forgotten to call a function that did some side-effect, a
 necessary one, before calling the next one? A few come to mind:
@@ -92,7 +90,7 @@ I believe that these 2 invariants will make building web servers much safer.
 
 If you manage to build a server that is not safe, **this is a bug**.
 
-#### Servers should be buildable by composable parts
+### Servers should be buildable by composable parts
 
 The first thing that came to mind when thinking of composable servers was
 `connect`, of Node.js fame. The library didn't invent, but popularized the
@@ -202,11 +200,11 @@ ctx
 If you manage to build middleware that should but does not compose safely,
 **this is a bug**.
 
-#### Servers should be responsive to all requests
+### Servers should be responsive to all requests
 
 TBD. I'm working on it 👨‍🏫 
 
-#### Servers should be fast to run
+### Servers should be fast to run
 
 The main idea here is that `httpkit` should have a negligible impact on the
 performance of your service. So if your API is slow, and it's because `httpkit`
@@ -285,6 +283,6 @@ I'm running this benchmark essentially on every change to make sure that the
 abstractions and safety that `httpkit` give you have close to zero impact on the
 performance of your service.
 
-### Client Principles
+## Principles: Client-side
 
 TBD! I'm working on it 👨‍🏫 

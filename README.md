@@ -1,8 +1,8 @@
 # ⚡️HttpKit — High-level, High-performance HTTP(S) Clients/Servers in Reason/OCaml
 
-Hello! `httpkit` is not much more than an experiment in API ergonomics backed
-by a type-system, that in this case is aimed both at being delightful to use,
-impossible to misuse, and blazingly fast.
+Hello! `httpkit` is not yet more than an experiment in API ergonomics backed by
+strong usage of the type-system, that in this case is aimed both at being
+delightful to use, impossible to misuse, and blazingly fast.
 
 It was born out of necessity really, while working on the `twitchboard` cli
 tool during one of the [ReasonableCoding](https://twitch.tv/ostera) streams,
@@ -11,6 +11,10 @@ because working directly with
 
 1. [Getting Started](#getting-started)
 2. [Principles: Server-side](#principles-server-side)
+  1. [Servers should be safe to build](#servers-should-be-safe-to-build)
+  2. [Servers should be buildable using composable parts](#servers-should-be-buildable-using-composable-parts)
+  3. [Servers should be responsive to all requests](#servers-should-be-responsive-to-all-requests)
+  4. [Servers should be fast to run](#servers-should-be-fast-to-run)
 2. [Principles: Client-side](#principles-client-side)
 
 ## Getting Started

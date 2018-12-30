@@ -176,7 +176,7 @@ ctx                    /* <-- initial context value! */
 
 And in this way we can compose request paths with smaller functions, most of
 which can be built once and reused everywhere, and the rest of which will be
-very nicely 
+safely composed.
 
 The last missing piece here is this composition operator. Clearly `|>` will not
 cut it. For this purpose, `httpkit` provides a combinator called `use`.

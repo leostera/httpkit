@@ -58,7 +58,7 @@ The following principles guide the server-side library:
 
 1. [Servers should be safe to build](#Servers-should-be-safe-to-build)
 2. [Servers should be buildable by composable parts](#Servers-should-be-buildable-by-composable-parts)
-3. [Servers should be responsive to all requests](#Servers-should-be-responsive-to-all requests)
+3. [Servers should be responsive to all requests](#Servers-should-be-responsive-to-all-requests)
 4. [Servers should be fast to run](#Servers-should-be-fast-to-run)
 
 In other words, `httpkit` should make it impossibly hard to do the wrong thing

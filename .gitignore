@@ -1,3 +1,5 @@
 _build
 _public
 .merlin
+/lua
+/lua_modules

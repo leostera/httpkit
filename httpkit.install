@@ -1,0 +1,53 @@
+lib: [
+  "_build/install/default/lib/httpkit/Httpkit.cmi" {"Httpkit.cmi"}
+  "_build/install/default/lib/httpkit/Httpkit.cmt" {"Httpkit.cmt"}
+  "_build/install/default/lib/httpkit/Httpkit.cmx" {"Httpkit.cmx"}
+  "_build/install/default/lib/httpkit/Httpkit.re" {"Httpkit.re"}
+  "_build/install/default/lib/httpkit/META" {"META"}
+  "_build/install/default/lib/httpkit/client/Https.re" {"client/Https.re"}
+  "_build/install/default/lib/httpkit/client/Https.rei" {"client/Https.rei"}
+  "_build/install/default/lib/httpkit/client/Response.re" {"client/Response.re"}
+  "_build/install/default/lib/httpkit/client/httpkit.client.dune" {"client/httpkit.client.dune"}
+  "_build/install/default/lib/httpkit/client/httpkit_client.a" {"client/httpkit_client.a"}
+  "_build/install/default/lib/httpkit/client/httpkit_client.cma" {"client/httpkit_client.cma"}
+  "_build/install/default/lib/httpkit/client/httpkit_client.cmi" {"client/httpkit_client.cmi"}
+  "_build/install/default/lib/httpkit/client/httpkit_client.cmt" {"client/httpkit_client.cmt"}
+  "_build/install/default/lib/httpkit/client/httpkit_client.cmx" {"client/httpkit_client.cmx"}
+  "_build/install/default/lib/httpkit/client/httpkit_client.cmxa" {"client/httpkit_client.cmxa"}
+  "_build/install/default/lib/httpkit/client/httpkit_client.cmxs" {"client/httpkit_client.cmxs"}
+  "_build/install/default/lib/httpkit/client/httpkit_client.ml" {"client/httpkit_client.ml"}
+  "_build/install/default/lib/httpkit/client/httpkit_client__Https.cmi" {"client/httpkit_client__Https.cmi"}
+  "_build/install/default/lib/httpkit/client/httpkit_client__Https.cmt" {"client/httpkit_client__Https.cmt"}
+  "_build/install/default/lib/httpkit/client/httpkit_client__Https.cmti" {"client/httpkit_client__Https.cmti"}
+  "_build/install/default/lib/httpkit/client/httpkit_client__Https.cmx" {"client/httpkit_client__Https.cmx"}
+  "_build/install/default/lib/httpkit/client/httpkit_client__Response.cmi" {"client/httpkit_client__Response.cmi"}
+  "_build/install/default/lib/httpkit/client/httpkit_client__Response.cmt" {"client/httpkit_client__Response.cmt"}
+  "_build/install/default/lib/httpkit/client/httpkit_client__Response.cmx" {"client/httpkit_client__Response.cmx"}
+  "_build/install/default/lib/httpkit/httpkit.a" {"httpkit.a"}
+  "_build/install/default/lib/httpkit/httpkit.cma" {"httpkit.cma"}
+  "_build/install/default/lib/httpkit/httpkit.cmxa" {"httpkit.cmxa"}
+  "_build/install/default/lib/httpkit/httpkit.cmxs" {"httpkit.cmxs"}
+  "_build/install/default/lib/httpkit/httpkit.dune" {"httpkit.dune"}
+  "_build/install/default/lib/httpkit/opam" {"opam"}
+  "_build/install/default/lib/httpkit/server/Http.re" {"server/Http.re"}
+  "_build/install/default/lib/httpkit/server/Server.re" {"server/Server.re"}
+  "_build/install/default/lib/httpkit/server/httpkit.server.dune" {"server/httpkit.server.dune"}
+  "_build/install/default/lib/httpkit/server/httpkit_server.a" {"server/httpkit_server.a"}
+  "_build/install/default/lib/httpkit/server/httpkit_server.cma" {"server/httpkit_server.cma"}
+  "_build/install/default/lib/httpkit/server/httpkit_server.cmi" {"server/httpkit_server.cmi"}
+  "_build/install/default/lib/httpkit/server/httpkit_server.cmt" {"server/httpkit_server.cmt"}
+  "_build/install/default/lib/httpkit/server/httpkit_server.cmx" {"server/httpkit_server.cmx"}
+  "_build/install/default/lib/httpkit/server/httpkit_server.cmxa" {"server/httpkit_server.cmxa"}
+  "_build/install/default/lib/httpkit/server/httpkit_server.cmxs" {"server/httpkit_server.cmxs"}
+  "_build/install/default/lib/httpkit/server/httpkit_server.ml" {"server/httpkit_server.ml"}
+  "_build/install/default/lib/httpkit/server/httpkit_server__Http.cmi" {"server/httpkit_server__Http.cmi"}
+  "_build/install/default/lib/httpkit/server/httpkit_server__Http.cmt" {"server/httpkit_server__Http.cmt"}
+  "_build/install/default/lib/httpkit/server/httpkit_server__Http.cmx" {"server/httpkit_server__Http.cmx"}
+  "_build/install/default/lib/httpkit/server/httpkit_server__Server.cmi" {"server/httpkit_server__Server.cmi"}
+  "_build/install/default/lib/httpkit/server/httpkit_server__Server.cmt" {"server/httpkit_server__Server.cmt"}
+  "_build/install/default/lib/httpkit/server/httpkit_server__Server.cmx" {"server/httpkit_server__Server.cmx"}
+]
+bin: [
+  "_build/install/default/bin/echottp" {"echottp"}
+  "_build/install/default/bin/request" {"request"}
+]

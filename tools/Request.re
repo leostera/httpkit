@@ -10,7 +10,7 @@ Logs.set_reporter(Logs_fmt.reporter());
 
 /** Setup async reporting */
 switch (
-  "https://api.github.com/"
+  "https://api.github.com/users/ostera"
   |> Uri.of_string
   |> Httpkit.Client.Https.send(~headers=[("User-Agent", "Reason HttpKit")])
   >>= Httpkit.Client.Response.body

@@ -9,8 +9,9 @@ tool during one of the [ReasonableCoding](https://twitch.tv/ostera) streams,
 because working directly with
 [`http/af`](https://github.com/inhabitedtype/httaf) is quite low-level.
 
-1. [Getting Started](#Getting-Started)
-2. [Principles](#Principles)
+1. [Getting Started](#getting-started)
+2. [Principles: Server-side](#principles-server-side)
+2. [Principles: Client-side](#principles-client-side)
 
 ## Getting Started
 
@@ -56,10 +57,10 @@ think! 🙌🏼
 
 The following principles guide the server-side library:
 
-1. [Servers should be safe to build](#Servers-should-be-safe-to-build)
-2. [Servers should be buildable by composable parts](#Servers-should-be-buildable-by-composable-parts)
-3. [Servers should be responsive to all requests](#Servers-should-be-responsive-to-all-requests)
-4. [Servers should be fast to run](#Servers-should-be-fast-to-run)
+1. [Servers should be safe to build](#servers-should-be-safe-to-build)
+2. [Servers should be buildable by composable parts](#servers-should-be-buildable-by-composable-parts)
+3. [Servers should be responsive to all requests](#servers-should-be-responsive-to-all-requests)
+4. [Servers should be fast to run](#servers-should-be-fast-to-run)
 
 In other words, `httpkit` should make it impossibly hard to do the wrong thing
 (i.e, [_Pit of

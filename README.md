@@ -16,6 +16,7 @@ because working directly with
    3. [Servers should be responsive to all requests](#servers-should-be-responsive-to-all-requests)
    4. [Servers should be fast to run](#servers-should-be-fast-to-run)
 2. [Principles: Client-side](#principles-client-side)
+2. [Benchmarks](https://github.com/ostera/httpkit/tree/master/bench)
 
 ## Getting Started
 

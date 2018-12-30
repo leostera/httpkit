@@ -15,6 +15,8 @@ because working directly with
 
 ## Getting Started
 
+#### Usage
+
 `httpkit` can be used both to build servers and to make requests as a client.
 
 Documentation is still a work-in-progress, but there's examples in the `tools`
@@ -52,6 +54,14 @@ Server.(
 
 I encourage you to read on through the Principles and let me know what you
 think! 🙌🏼
+
+#### Installing
+
+You can install by pinning with opam:
+
+```sh
+$ opam pin add httpkit git+https://github.com/ostera/httpkit
+```
 
 ## Principles: Server-side
 

@@ -1,7 +1,4 @@
-module Middleware = {
-  type replied =
-    | Replied;
-
+module type M = {
   type ctx('a) = {
     respond:
       (
@@ -9,53 +6,67 @@ module Middleware = {
         ~headers: list((string, string))=?,
         string
       ) =>
-      replied,
+      unit,
+    req: Httpaf.Request.t,
+    state: 'a,
+  };
+  type t('a, 'b) = ctx('a) => 'b;
+};
+
+module Middleware: M = {
+  type ctx('a) = {
+    respond:
+      (
+        ~status: Httpaf.Status.t,
+        ~headers: list((string, string))=?,
+        string
+      ) =>
+      unit,
     req: Httpaf.Request.t,
     state: 'a,
   };
 
   type t('a, 'b) = ctx('a) => 'b;
-  type reply('a) = t('a, replied);
-
-  type stack('i, 'o) =
-    | Init('a): stack('a, 'a)
-    | Next(t('b, 'c), stack('a, 'b)): stack('a, 'c);
-
-  let rec run: type i o. (_, Httpaf.Request.t, stack(i, o)) => o =
-    (respond, req, stack) =>
-      switch (stack) {
-      | Init(last) => last
-      | Next(f, cont) => f({respond, req, state: run(respond, req, cont)})
-      };
 };
+
+type stack('i, 'o) =
+  | Init('a): stack('a, 'a)
+  | Next(Middleware.t('b, 'c), stack('a, 'b)): stack('a, 'c);
+
+let rec run: type i o. (_, Httpaf.Request.t, stack(i, o)) => o =
+  (respond, req, stack) =>
+    switch (stack) {
+    | Init(last) => last
+    | Next(f, cont) => f({respond, req, state: run(respond, req, cont)})
+    };
 
 type status = [ | `Clean | `Listening | `With_middleware];
 type has_response = [ | `No_response | `Responded];
 type t('status, 'replied, 'state_in, 'state_out) = {
   state: 'state_in,
-  middleware: Middleware.stack('state_in, 'state_out),
+  middleware: stack('state_in, 'state_out),
 };
 
 let make: 'state => t([ | `Clean], [ | `No_response], 'state, 'state) =
-  state => {state, middleware: Middleware.Init(state)};
+  state => {state, middleware: Init(state)};
 
 let use:
   (Middleware.t('b, 'c), t([< | `Clean | `With_middleware], 'r, 'a, 'b)) =>
   t([ | `With_middleware], 'r, 'a, 'c) =
   (middleware, server) => {
     state: server.state,
-    middleware: Middleware.Next(middleware, server.middleware),
+    middleware: Next(middleware, server.middleware),
   };
 
 let reply:
   (
-    Middleware.reply('b),
+    Middleware.t('b, 'c),
     t([< | `Clean | `With_middleware], [ | `No_response], 'a, 'b)
   ) =>
-  t([ | `With_middleware], [ | `Responded], 'a, Middleware.replied) =
+  t([ | `With_middleware], [ | `Responded], 'a, 'c) =
   (middleware, server) => {
     state: server.state,
-    middleware: Middleware.Next(middleware, server.middleware),
+    middleware: Next(middleware, server.middleware),
   };
 
 let listen:
@@ -85,9 +96,8 @@ let listen:
             |> Httpaf.Headers.of_list;
           let res = Httpaf.Response.create(status, ~headers);
           Httpaf.Reqd.respond_with_string(reqd, res, content);
-          Middleware.Replied;
         };
-        server.middleware |> Middleware.run(respond, req) |> ignore;
+        server.middleware |> run(respond, req) |> ignore;
       };
 
     let error_handler:

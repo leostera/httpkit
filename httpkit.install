@@ -31,6 +31,7 @@ lib: [
   "_build/install/default/lib/httpkit/opam" {"opam"}
   "_build/install/default/lib/httpkit/server/Http.re" {"server/Http.re"}
   "_build/install/default/lib/httpkit/server/Server.re" {"server/Server.re"}
+  "_build/install/default/lib/httpkit/server/Server.rei" {"server/Server.rei"}
   "_build/install/default/lib/httpkit/server/httpkit.server.dune" {"server/httpkit.server.dune"}
   "_build/install/default/lib/httpkit/server/httpkit_server.a" {"server/httpkit_server.a"}
   "_build/install/default/lib/httpkit/server/httpkit_server.cma" {"server/httpkit_server.cma"}
@@ -45,6 +46,7 @@ lib: [
   "_build/install/default/lib/httpkit/server/httpkit_server__Http.cmx" {"server/httpkit_server__Http.cmx"}
   "_build/install/default/lib/httpkit/server/httpkit_server__Server.cmi" {"server/httpkit_server__Server.cmi"}
   "_build/install/default/lib/httpkit/server/httpkit_server__Server.cmt" {"server/httpkit_server__Server.cmt"}
+  "_build/install/default/lib/httpkit/server/httpkit_server__Server.cmti" {"server/httpkit_server__Server.cmti"}
   "_build/install/default/lib/httpkit/server/httpkit_server__Server.cmx" {"server/httpkit_server__Server.cmx"}
 ]
 bin: [

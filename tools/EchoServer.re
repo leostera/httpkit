@@ -8,42 +8,44 @@ Logs.set_reporter(Logs_fmt.reporter());
 
 open Httpkit;
 
-type state = {req_count: int};
+module Common = {
+  let log: Server.Middleware.ctx('a) => 'a =
+    ctx => {
+      let {Unix.tm_hour, tm_min, tm_sec, _} = Unix.time() |> Unix.localtime;
+      let time = Printf.sprintf("%d:%d:%d", tm_hour, tm_min, tm_sec);
 
-let log: Server.Middleware.t(state, state) =
-  ctx => {
-    let {Unix.tm_hour, tm_min, tm_sec, _} = Unix.time() |> Unix.localtime;
-    let time = Printf.sprintf("%d:%d:%d", tm_hour, tm_min, tm_sec);
+      let meth = ctx.req.meth |> Httpaf.Method.to_string;
+      let path = ctx.req.target;
 
-    let meth = ctx.req.meth |> Httpaf.Method.to_string;
-    let path = ctx.req.target;
+      Logs.info(m => m("%s — %s %s", time, meth, path));
 
-    Logs.info(m => m("%s — %s %s", time, meth, path));
-
-    {req_count: ctx.state.req_count};
-  };
-
-type other = {
-  req_count: int,
-  name: string,
+      ctx.state;
+    };
 };
 
-let inc: Server.Middleware.t(state, other) =
-  ctx => {req_count: ctx.state.req_count + 1, name: "what"};
-
-let json: Server.Middleware.t(other, Server.Middleware.replied) =
-  ctx => {
-    let str = ctx.state.req_count |> string_of_int;
-    ctx.respond(~status=`OK, str);
+module App = {
+  type state = {req_count: int};
+  let initial_state = {req_count: 0};
+  type other = {
+    req_count: int,
+    name: string,
   };
+  let inc: Server.Middleware.t(state, other) =
+    ctx => {req_count: ctx.state.req_count + 1, name: "what"};
+  let json: Server.Middleware.t(other, unit) =
+    ctx => {
+      let str = ctx.state.req_count |> string_of_int;
+      ctx.respond(~status=`OK, str);
+    };
+};
 
 let on_start = () => Printf.printf("Running on localhost:2112");
 
 Server.(
-  make({req_count: 0})
-  |> use(log)
-  |> use(inc)
-  |> reply(json)
+  make(App.initial_state)
+  |> use(Common.log)
+  |> use(App.inc)
+  |> reply(App.json)
   |> listen(~port=9999, ~on_start)
   |> Lwt_main.run
 );

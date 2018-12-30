@@ -40,33 +40,31 @@ module type S = {
 /**
   Functor to make server modules.
   */
-module Make = (H: Handlers) : S => {
-  let start = (~port, ~on_start) => {
-    open Lwt.Infix;
+let start = (~port, ~on_start, ~request_handler, ~error_handler) => {
+  open Lwt.Infix;
 
-    let (forever, awaker) = Lwt.wait();
-    let closer = () => Lwt.wakeup_later(awaker, ());
+  let (forever, awaker) = Lwt.wait();
+  let closer = () => Lwt.wakeup_later(awaker, ());
 
-    let listening_address = Unix.(ADDR_INET(inet_addr_loopback, port));
+  let listening_address = Unix.(ADDR_INET(inet_addr_loopback, port));
 
-    let connection_handler =
-      Httpaf_lwt.Server.create_connection_handler(
-        ~request_handler=H.request_handler(~closer),
-        ~error_handler=H.error_handler,
-      );
+  let connection_handler =
+    Httpaf_lwt.Server.create_connection_handler(
+      ~request_handler=request_handler(~closer),
+      ~error_handler,
+    );
 
-    Lwt_io.establish_server_with_client_socket(
-      listening_address,
-      connection_handler,
-    )
-    >>= (
-      _ => {
-        on_start();
-        Lwt.return_unit;
-      }
-    )
-    |> ignore;
+  Lwt_io.establish_server_with_client_socket(
+    listening_address,
+    connection_handler,
+  )
+  >>= (
+    _ => {
+      on_start();
+      Lwt.return_unit;
+    }
+  )
+  |> ignore;
 
-    forever;
-  };
+  forever;
 };

@@ -8,4 +8,4 @@
   (name EchoServer)
   (modules EchoServer)
   (public_name echottp)
-  (libraries httpkit logs.fmt fmt.tty))
+  (libraries httpkit logs.fmt fmt.tty lwt))

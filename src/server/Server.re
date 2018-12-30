@@ -1,3 +1,5 @@
+module Http = Http;
+
 module type M = {
   type ctx('a) = {
     respond:
@@ -112,3 +114,8 @@ let listen:
 
     Http.start(~port, ~on_start, ~request_handler, ~error_handler);
   };
+
+module Infix = {
+  let ( *> ) = (s, m) => use(m, s);
+  let (<<) = (s, m) => reply(m, s);
+};

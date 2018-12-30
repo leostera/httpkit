@@ -9,3 +9,9 @@
   (modules EchoServer)
   (public_name echottp)
   (libraries httpkit logs.fmt fmt.tty lwt))
+
+(executable
+  (name RawEchoServer)
+  (modules RawEchoServer)
+  (public_name rawechottp)
+  (libraries httpkit httpaf logs.fmt fmt.tty lwt))

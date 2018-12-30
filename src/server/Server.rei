@@ -1,4 +1,16 @@
-module type M = {
+module Http: {
+  let start:
+    (
+      ~port: int,
+      ~on_start: unit => unit,
+      ~request_handler: (~closer: unit => unit, Unix.sockaddr) =>
+                        Httpaf_lwt.Server.request_handler,
+      ~error_handler: Unix.sockaddr => Httpaf.Server_connection.error_handler
+    ) =>
+    Lwt.t(unit);
+};
+
+module Middleware: {
   type ctx('a) = {
     respond:
       (
@@ -12,7 +24,6 @@ module type M = {
   };
   type t('a, 'b) = ctx('a) => 'b;
 };
-module Middleware: M;
 
 type status = [ | `Clean | `Listening | `With_middleware];
 type has_response = [ | `No_response | `Responded];
@@ -38,3 +49,16 @@ let listen:
     t([ | `With_middleware], [ | `Responded], 'a, 'b)
   ) =>
   Lwt.t(unit);
+
+module Infix: {
+  let ( *> ):
+    (t([< | `Clean | `With_middleware], 'r, 'a, 'b), Middleware.t('b, 'c)) =>
+    t([ | `With_middleware], 'r, 'a, 'c);
+
+  let (<<):
+    (
+      t([< | `Clean | `With_middleware], [ | `No_response], 'a, 'b),
+      Middleware.t('b, 'c)
+    ) =>
+    t([ | `With_middleware], [ | `Responded], 'a, 'c);
+};

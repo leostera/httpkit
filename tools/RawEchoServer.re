@@ -54,11 +54,46 @@ let on_start = () => Printf.printf("Running on localhost:2112");
  );
  */
 
-Server.(
-  make(App.initial_state)
-  |> use(Common.log)
-  |> use(App.inc)
-  |> reply(App.json)
-  |> listen(~port=9999, ~on_start)
-  |> Lwt_main.run
-);
+let request_handler:
+  (~closer: unit => unit, Unix.sockaddr) => Httpaf_lwt.Server.request_handler =
+  (~closer as _, _client, reqd) => {
+    let req = Httpaf.Reqd.request(reqd);
+    let respond = (~status, ~headers=?, content) => {
+      let headers =
+        (
+          switch (headers) {
+          | None => []
+          | Some(hs) => hs
+          }
+        )
+        @ [("Content-Length", content |> String.length |> string_of_int)]
+        |> Httpaf.Headers.of_list;
+      let res = Httpaf.Response.create(status, ~headers);
+      Httpaf.Reqd.respond_with_string(reqd, res, content);
+    };
+    open Httpkit.Server.Middleware;
+    let ctx = {req, respond, state: App.initial_state};
+    /* manually run middlewares */
+    Common.log(ctx)
+    |> (state => App.inc({req, respond, state}))
+    |> (state => App.json({req, respond, state}))
+    |> ignore;
+  };
+
+let error_handler:
+  (
+    Unix.sockaddr,
+    ~request: Httpaf.Request.t=?,
+    Httpaf.Server_connection.error,
+    Httpaf.Headers.t => Httpaf.Body.t([ | `write])
+  ) =>
+  unit =
+  (_client, ~request as _=?, _err, _get) => ();
+
+Httpkit.Server.Http.start(
+  ~port=9999,
+  ~on_start,
+  ~request_handler,
+  ~error_handler,
+)
+|> Lwt_main.run;

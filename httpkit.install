@@ -29,6 +29,7 @@ lib: [
   "_build/install/default/lib/httpkit/httpkit.cmxs" {"httpkit.cmxs"}
   "_build/install/default/lib/httpkit/httpkit.dune" {"httpkit.dune"}
   "_build/install/default/lib/httpkit/opam" {"opam"}
+  "_build/install/default/lib/httpkit/server/Common.re" {"server/Common.re"}
   "_build/install/default/lib/httpkit/server/Middleware.re" {"server/Middleware.re"}
   "_build/install/default/lib/httpkit/server/Server.re" {"server/Server.re"}
   "_build/install/default/lib/httpkit/server/Server.rei" {"server/Server.rei"}
@@ -41,6 +42,9 @@ lib: [
   "_build/install/default/lib/httpkit/server/httpkit_server.cmxa" {"server/httpkit_server.cmxa"}
   "_build/install/default/lib/httpkit/server/httpkit_server.cmxs" {"server/httpkit_server.cmxs"}
   "_build/install/default/lib/httpkit/server/httpkit_server.ml" {"server/httpkit_server.ml"}
+  "_build/install/default/lib/httpkit/server/httpkit_server__Common.cmi" {"server/httpkit_server__Common.cmi"}
+  "_build/install/default/lib/httpkit/server/httpkit_server__Common.cmt" {"server/httpkit_server__Common.cmt"}
+  "_build/install/default/lib/httpkit/server/httpkit_server__Common.cmx" {"server/httpkit_server__Common.cmx"}
   "_build/install/default/lib/httpkit/server/httpkit_server__Middleware.cmi" {"server/httpkit_server__Middleware.cmi"}
   "_build/install/default/lib/httpkit/server/httpkit_server__Middleware.cmt" {"server/httpkit_server__Middleware.cmt"}
   "_build/install/default/lib/httpkit/server/httpkit_server__Middleware.cmx" {"server/httpkit_server__Middleware.cmx"}
@@ -72,6 +76,7 @@ lib: [
 ]
 bin: [
   "_build/install/default/bin/echottp" {"echottp"}
+  "_build/install/default/bin/helloworld" {"helloworld"}
   "_build/install/default/bin/rawechottp" {"rawechottp"}
   "_build/install/default/bin/request" {"request"}
 ]

@@ -25,3 +25,4 @@ module Infix = {
 };
 
 module Middleware = Middleware;
+module Common = Common;

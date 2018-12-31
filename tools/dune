@@ -1,4 +1,11 @@
 (executable
+  (name HelloWorld)
+  (modules HelloWorld)
+  (public_name helloworld)
+	(ocamlopt_flags -O3)
+  (libraries httpkit logs.fmt fmt.tty lwt))
+
+(executable
   (name Request)
   (public_name request)
   (modules Request)

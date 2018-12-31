@@ -33,6 +33,26 @@ module Middleware: {
     'o;
 };
 
+module Common: {
+  let log: Middleware.t('a, 'a);
+
+  type headers = list((string, string));
+  type path = list(string);
+
+  type route_handler('a) =
+    ('a, path) =>
+    [
+      | `OK(string)
+      | `With_headers(Httpaf.Status.t, headers, string)
+      | `With_status(Httpaf.Status.t, string)
+      | `Unmatched
+    ];
+
+  let router:
+    route_handler('a) =>
+    Middleware.t('a, [ | `Replied(Httpaf.Status.t, headers, string)]);
+};
+
 type status = [ | `Clean | `Listening | `With_middleware];
 type has_response = [ | `No_response | `Responded];
 type t('status, 'has_response, 'state_in, 'state_out);

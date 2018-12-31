@@ -8,21 +8,6 @@ Logs.set_reporter(Logs_fmt.reporter());
 
 open Httpkit;
 
-module Common = {
-  let log: Server.Middleware.t('a, 'a) =
-    ctx => {
-      let {Unix.tm_hour, tm_min, tm_sec, _} = Unix.time() |> Unix.localtime;
-      let time = Printf.sprintf("%d:%d:%d", tm_hour, tm_min, tm_sec);
-
-      let meth = ctx.req.meth |> Httpaf.Method.to_string;
-      let path = ctx.req.target;
-
-      Logs.info(m => m("%s — %s %s", time, meth, path));
-
-      ctx.state;
-    };
-};
-
 module App = {
   type state = {req_count: int};
   let initial_state = {req_count: 0};
@@ -44,7 +29,7 @@ let on_start = () => Logs.app(m => m("Running on localhost:9999"));
 
 Httpkit.Server.(
   make(App.initial_state)
-  |> use(Common.log)
+  |> use(Httpkit.Server.Common.log)
   |> use(App.inc)
   |> reply(App.json)
   |> Httpkit.Http.listen(~port=9999, ~on_start)

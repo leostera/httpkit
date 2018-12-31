@@ -20,14 +20,14 @@ wrk2 \
 ```
 ## Results
 
-| Lang    | Lib                |   KB/s   | RPS   | Total Req |
-|---------|--------------------|----------|-------|-----------|
-| OCaml   | httpkit+httpaf+lwt | 414.17KB | 10874 |   326230  |
-| OCaml   | httpaf+lwt         | 414.76KB | 10890 |   326792  |
-| Ruby    | rack			         | 149.70KB |   806 |    24349  |
-| Node.js | stdlib http        | 591.80KB |  5179 |   155767  |
-| Golang  | stdlib http        |   0.95MB | 13314 |   399390  |
-| Python  | BaseHTTPServer     |  65.50KB |   519 |    15704  |
+| Lang    | Lib                 |   KB/s   | RPS   | Total Req |
+|---------|---------------------|----------|-------|-----------|
+| OCaml   | httpkit+http/af+lwt | 414.17KB | 10874 |   326230  |
+| OCaml   | http/af+lwt         | 414.76KB | 10890 |   326792  |
+| Ruby    | rack                | 149.70KB |   806 |    24349  |
+| Node.js | stdlib http         | 591.80KB |  5179 |   155767  |
+| Golang  | stdlib http         |   0.95MB | 13314 |   399390  |
+| Python  | BaseHTTPServer      |  65.50KB |   519 |    15704  |
 
 ## Details
 

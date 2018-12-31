@@ -91,8 +91,8 @@ necessary one, before calling the next one? A few come to mind:
 We all do this, we realize the problem fairly quickly, we fix it. But if we have
 tools that can help us with this, why aren't we using them more extensively?
 
-By making heavy use of type-state, `httpkit` aims to only let you build servers
-that do _The Right Thing_:
+By making heavy use of type-state and GADTs, `httpkit` aims to only let you
+build servers that do _The Right Thing_:
 
 * Servers can not be started if they don't always reply to a request
 * All middleware must compose type-safely 

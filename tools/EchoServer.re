@@ -39,20 +39,8 @@ module App = {
     };
 };
 
-let on_start = () => Printf.printf("Running on localhost:2112");
-
-/*
- Server.Infix.(
-   Server.(
-     make(App.initial_state)
-     *> Common.log
-     *> App.inc
-     << App.json
-     |> listen(~port=9999, ~on_start)
-     |> Lwt_main.run
-   )
- );
- */
+/* TODO(@ostera):  why aren't we running this? */
+let on_start = () => Printf.printf("Running on localhost:9999");
 
 Server.(
   make(App.initial_state)

@@ -10,6 +10,9 @@ because working directly with
 [`http/af`](https://github.com/inhabitedtype/httaf) is quite low-level.
 
 1. [Getting Started](#getting-started)
+2. [Common Middleware](#common-middleware)
+   1. [Log](#log)
+   2. [Router](#router)
 2. [Principles: Server-side](#principles-server-side)
    1. [Servers should be safe to build](#servers-should-be-safe-to-build)
    2. [Servers should be buildable using composable parts](#servers-should-be-buildable-using-composable-parts)
@@ -62,6 +65,89 @@ You can install by pinning with opam:
 ```sh
 $ opam pin add httpkit git+https://github.com/ostera/httpkit
 ```
+
+## Common Middleware
+
+As I start using `httpkit` in other projects, I'm quickly realizing there's a family of very common middleware that should be bundled as part of the library to 
+support getting up and running quickly.
+
+So far I've identified two: `Common.log`, and `Common.router`.
+
+#### Log
+
+Drop the logger anywhere in your middleware chain to log a request with method,
+path, and timestamp as an _info_.
+
+```sh
+ostera/httpkit λ ./_build/default/tools/HelloWorld.exe
+Running on localhost:9999
+HelloWorld.exe: [INFO] 15:56:43 — GET /with/code/401
+HelloWorld.exe: [INFO] 15:56:44 — GET /with/code/402
+HelloWorld.exe: [INFO] 15:56:45 — GET /with/code/403
+```
+
+#### Router
+
+The router can be dropped in as a regular middleware or as a replier, and it's
+configurable with a routing table (in the form of a function that takes the
+current application state, and the tokenized path and returns a response).
+
+It's very simple, and it relies on polymorphic variants to ensure that the
+statuses returned are valid:
+
+```reason
+let route_handler = (state, path) =>
+  switch (path) {
+  | [""] => `OK("hello world #" ++ state.random)
+  | ["admin"] =>
+    switch (state.user) {
+    | `Anonymous => `With_status((`Unauthorized, "Yikes! Login first."))
+    | `Admin(user) => `OK("welcome back, " ++ user.name ++ "!")
+    | _ => `Unmatched
+    }
+  | _ => `Unmatched
+  };
+
+/* ... */
+  server 
+  |> reply(Common.router(App.route_handler))
+/* ... */
+```
+
+If you were to use `With_status` with an invalid status (say, `Unauthed`), you'd
+get this nice error:
+
+```sh
+Error: This expression has type [> `With_status of Httpaf.Status.t * string ]
+       but an expression was expected of type
+         [> `OK of string | `With_status of ([> `Unauthed ] as 'a) * string ]
+       Type
+         Httpaf.Status.t =
+           [ `Accepted
+           | `Bad_gateway
+           | `Bad_request
+           | `Code of int
+           | `Conflict
+           | `Continue
+           | `Created
+           | `Enhance_your_calm
+           | `Expectation_failed
+           | `Forbidden
+           | `Found
+					 | ... # removed a few so it fits here :P
+           | `Unauthorized
+           | `Unsupported_media_type
+           | `Upgrade_required
+           | `Uri_too_long
+           | `Use_proxy ]
+       is not compatible with type [> `Uniauth ] as 'a
+       The first variant type does not allow tag(s) `Uniauth
+Had errors.
+```
+> **Note**: I'm still investigating how to change the type signature of the
+> server depending on what the middleware is doing with the context. I've got
+> some ideas but it might take some time before they work. If you have some
+> please find me on Discord as @ostera!
 
 ## Principles: Server-side
 

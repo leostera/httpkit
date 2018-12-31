@@ -13,7 +13,7 @@ module App = {
   let route_handler = (state, path) =>
     switch (path) {
     | [""] => `OK("hello world #" ++ state.random)
-    | ["err"] => `With_status((`Unauthorized, "Yikes! Login first."))
+    | ["err"] => `With_status((`Uniauth, "Yikes! Login first."))
     | ["with", "code", code] =>
       `With_status((code |> Httpaf.Status.of_string, ""))
     | _ => `Unmatched

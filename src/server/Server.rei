@@ -1,15 +1,3 @@
-module Http: {
-  let start:
-    (
-      ~port: int,
-      ~on_start: unit => unit,
-      ~request_handler: (~closer: unit => unit, Unix.sockaddr) =>
-                        Httpaf_lwt.Server.request_handler,
-      ~error_handler: Unix.sockaddr => Httpaf.Server_connection.error_handler
-    ) =>
-    Lwt.t(unit);
-};
-
 module Middleware: {
   type ctx('a) = {
     respond:
@@ -22,7 +10,25 @@ module Middleware: {
     req: Httpaf.Request.t,
     state: 'a,
   };
+
   type t('a, 'b) = ctx('a) => 'b;
+
+  type stack('i, 'o) =
+    | Init('a): stack('a, 'a)
+    | Next(t('b, 'c), stack('a, 'b)): stack('a, 'c);
+
+  let run:
+    (
+      (
+        ~status: Httpaf.Status.t,
+        ~headers: list((string, string))=?,
+        string
+      ) =>
+      unit,
+      Httpaf.Request.t,
+      stack('i, 'o)
+    ) =>
+    'o;
 };
 
 type status = [ | `Clean | `Listening | `With_middleware];
@@ -42,13 +48,7 @@ let reply:
   ) =>
   t([ | `With_middleware], [ | `Responded], 'a, 'c);
 
-let listen:
-  (
-    ~port: int,
-    ~on_start: unit => unit,
-    t([ | `With_middleware], [ | `Responded], 'a, 'b)
-  ) =>
-  Lwt.t(unit);
+let middleware: t('s, 'r, 'a, 'b) => Middleware.stack('a, 'b);
 
 module Infix: {
   let ( *> ):

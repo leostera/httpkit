@@ -9,7 +9,7 @@ Logs.set_reporter(Logs_fmt.reporter());
 open Httpkit;
 
 module Common = {
-  let log: Server.Middleware.ctx('a) => 'a =
+  let log: Server.Middleware.t('a, 'a) =
     ctx => {
       let {Unix.tm_hour, tm_min, tm_sec, _} = Unix.time() |> Unix.localtime;
       let time = Printf.sprintf("%d:%d:%d", tm_hour, tm_min, tm_sec);
@@ -40,13 +40,16 @@ module App = {
 };
 
 /* TODO(@ostera):  why aren't we running this? */
-let on_start = () => Printf.printf("Running on localhost:9999");
+let on_start = () => Logs.app(m => m("Running on localhost:9999"));
 
-Server.(
+Httpkit.Server.(
   make(App.initial_state)
   |> use(Common.log)
   |> use(App.inc)
   |> reply(App.json)
-  |> listen(~port=9999, ~on_start)
+  |> Httpkit.Http.listen(~port=9999, ~on_start)
+  /*
+   |> Httpkit.Https.listen(~port=9999, ~on_start, ~key, ~cert)
+   */
   |> Lwt_main.run
 );

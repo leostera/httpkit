@@ -41,19 +41,6 @@ module App = {
 
 let on_start = () => Printf.printf("Running on localhost:2112");
 
-/*
- Server.Infix.(
-   Server.(
-     make(App.initial_state)
-     *> Common.log
-     *> App.inc
-     << App.json
-     |> listen(~port=9999, ~on_start)
-     |> Lwt_main.run
-   )
- );
- */
-
 let request_handler:
   (~closer: unit => unit, Unix.sockaddr) => Httpaf_lwt.Server.request_handler =
   (~closer as _, _client, reqd) => {
@@ -90,10 +77,7 @@ let error_handler:
   unit =
   (_client, ~request as _=?, _err, _get) => ();
 
-Httpkit.Server.Http.start(
-  ~port=9999,
-  ~on_start,
-  ~request_handler,
-  ~error_handler,
+Httpkit_transports.(
+  Http.start(~port=9999, ~on_start, ~request_handler, ~error_handler)
 )
 |> Lwt_main.run;

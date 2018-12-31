@@ -30,29 +30,24 @@ section that can give you a better idea of how to use the libraries. In short:
 For making a request:
 
 ```reason
-switch (
-  "https://api.github.com/users/ostera"
-  |> Uri.of_string
-  |> Httpkit.Client.Https.send(~headers=[("User-Agent", "Reason HttpKit")])
-  >>= Httpkit.Client.Response.body
+Httpkit.Client.(
+  Uri.of_string("https://api.github.com/users/ostera")
+  |> Https.send(~headers=[("User-Agent", "Reason HttpKit")])
+  >>= Response.body
   |> Lwt_main.run
-) {
-| exception e => Printf.printf("%s", Printexc.to_string(e))
-| Ok(body) => Printf.printf("%s", body)
-| Error(_) => Printf.printf("Something went wrong!")
-};
-
+);
 ```
 
 For making a server:
 
 ```reason
-Server.(
+Httpkit.Server.(
   make(App.initial_state)
   |> use(Common.log)
   |> use(App.inc)
   |> reply(App.json)
-  |> listen(~port=9999, ~on_start)
+  |> Httpkit.Http.listen(~port=9999, ~on_start)
+/*|> Httpkit.Https.listen(~port=9999, ~on_start, ~key, ~cert) */
   |> Lwt_main.run
 );
 ```

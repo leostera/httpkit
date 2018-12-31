@@ -16,7 +16,7 @@ switch (
   >>= Httpkit.Client.Response.body
   |> Lwt_main.run
 ) {
-| exception e => Printf.printf("%s", Printexc.to_string(e))
+| exception e => Logs.err(m => m("%s", Printexc.to_string(e)))
 | Ok(body) => Printf.printf("%s", body)
-| Error(_) => Printf.printf("Something went wrong!")
+| Error(_) => Logs.err(m => m("Something went wrong!!!"))
 };

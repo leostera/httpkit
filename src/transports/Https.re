@@ -13,7 +13,7 @@ type error_handler =
   unit;
 
 let make_request_handler: Server.t('s, 'r, 'a, 'b) => request_handler =
-  (server, ~closer as _, _client, reqd) => {
+  (server, ~closer, _client, reqd) => {
     let req = Httpaf.Reqd.request(reqd);
     let respond = (~status, ~headers=?, content) => {
       let headers =
@@ -30,7 +30,7 @@ let make_request_handler: Server.t('s, 'r, 'a, 'b) => request_handler =
     };
     server
     |> Server.middleware
-    |> Server.Middleware.run(respond, req)
+    |> Server.Middleware.run(closer, respond, req)
     |> ignore;
   };
 

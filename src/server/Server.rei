@@ -8,6 +8,7 @@ module Middleware: {
       ) =>
       unit,
     req: Httpaf.Request.t,
+    closer: unit => unit,
     state: 'a,
   };
 
@@ -19,6 +20,7 @@ module Middleware: {
 
   let run:
     (
+      unit => unit,
       (
         ~status: Httpaf.Status.t,
         ~headers: list((string, string))=?,

@@ -43,7 +43,7 @@ let on_start = () => Printf.printf("Running on localhost:2112");
 
 let request_handler:
   (~closer: unit => unit, Unix.sockaddr) => Httpaf_lwt.Server.request_handler =
-  (~closer as _, _client, reqd) => {
+  (~closer, _client, reqd) => {
     let req = Httpaf.Reqd.request(reqd);
     let respond = (~status, ~headers=?, content) => {
       let headers =
@@ -59,11 +59,11 @@ let request_handler:
       Httpaf.Reqd.respond_with_string(reqd, res, content);
     };
     open Httpkit.Server.Middleware;
-    let ctx = {req, respond, state: App.initial_state};
+    let ctx = {closer, req, respond, state: App.initial_state};
     /* manually run middlewares */
     Common.log(ctx)
-    |> (state => App.inc({req, respond, state}))
-    |> (state => App.json({req, respond, state}))
+    |> (state => App.inc({closer, req, respond, state}))
+    |> (state => App.json({closer, req, respond, state}))
     |> ignore;
   };
 

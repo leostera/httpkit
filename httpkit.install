@@ -29,7 +29,7 @@ lib: [
   "_build/install/default/lib/httpkit/httpkit.cmxs" {"httpkit.cmxs"}
   "_build/install/default/lib/httpkit/httpkit.dune" {"httpkit.dune"}
   "_build/install/default/lib/httpkit/opam" {"opam"}
-  "_build/install/default/lib/httpkit/server/Http.re" {"server/Http.re"}
+  "_build/install/default/lib/httpkit/server/Middleware.re" {"server/Middleware.re"}
   "_build/install/default/lib/httpkit/server/Server.re" {"server/Server.re"}
   "_build/install/default/lib/httpkit/server/Server.rei" {"server/Server.rei"}
   "_build/install/default/lib/httpkit/server/httpkit.server.dune" {"server/httpkit.server.dune"}
@@ -41,13 +41,34 @@ lib: [
   "_build/install/default/lib/httpkit/server/httpkit_server.cmxa" {"server/httpkit_server.cmxa"}
   "_build/install/default/lib/httpkit/server/httpkit_server.cmxs" {"server/httpkit_server.cmxs"}
   "_build/install/default/lib/httpkit/server/httpkit_server.ml" {"server/httpkit_server.ml"}
-  "_build/install/default/lib/httpkit/server/httpkit_server__Http.cmi" {"server/httpkit_server__Http.cmi"}
-  "_build/install/default/lib/httpkit/server/httpkit_server__Http.cmt" {"server/httpkit_server__Http.cmt"}
-  "_build/install/default/lib/httpkit/server/httpkit_server__Http.cmx" {"server/httpkit_server__Http.cmx"}
+  "_build/install/default/lib/httpkit/server/httpkit_server__Middleware.cmi" {"server/httpkit_server__Middleware.cmi"}
+  "_build/install/default/lib/httpkit/server/httpkit_server__Middleware.cmt" {"server/httpkit_server__Middleware.cmt"}
+  "_build/install/default/lib/httpkit/server/httpkit_server__Middleware.cmx" {"server/httpkit_server__Middleware.cmx"}
   "_build/install/default/lib/httpkit/server/httpkit_server__Server.cmi" {"server/httpkit_server__Server.cmi"}
   "_build/install/default/lib/httpkit/server/httpkit_server__Server.cmt" {"server/httpkit_server__Server.cmt"}
   "_build/install/default/lib/httpkit/server/httpkit_server__Server.cmti" {"server/httpkit_server__Server.cmti"}
   "_build/install/default/lib/httpkit/server/httpkit_server__Server.cmx" {"server/httpkit_server__Server.cmx"}
+  "_build/install/default/lib/httpkit/transports/Http.re" {"transports/Http.re"}
+  "_build/install/default/lib/httpkit/transports/Https.re" {"transports/Https.re"}
+  "_build/install/default/lib/httpkit/transports/Transports.re" {"transports/Transports.re"}
+  "_build/install/default/lib/httpkit/transports/httpkit.transports.dune" {"transports/httpkit.transports.dune"}
+  "_build/install/default/lib/httpkit/transports/httpkit_transports.a" {"transports/httpkit_transports.a"}
+  "_build/install/default/lib/httpkit/transports/httpkit_transports.cma" {"transports/httpkit_transports.cma"}
+  "_build/install/default/lib/httpkit/transports/httpkit_transports.cmi" {"transports/httpkit_transports.cmi"}
+  "_build/install/default/lib/httpkit/transports/httpkit_transports.cmt" {"transports/httpkit_transports.cmt"}
+  "_build/install/default/lib/httpkit/transports/httpkit_transports.cmx" {"transports/httpkit_transports.cmx"}
+  "_build/install/default/lib/httpkit/transports/httpkit_transports.cmxa" {"transports/httpkit_transports.cmxa"}
+  "_build/install/default/lib/httpkit/transports/httpkit_transports.cmxs" {"transports/httpkit_transports.cmxs"}
+  "_build/install/default/lib/httpkit/transports/httpkit_transports.ml" {"transports/httpkit_transports.ml"}
+  "_build/install/default/lib/httpkit/transports/httpkit_transports__Http.cmi" {"transports/httpkit_transports__Http.cmi"}
+  "_build/install/default/lib/httpkit/transports/httpkit_transports__Http.cmt" {"transports/httpkit_transports__Http.cmt"}
+  "_build/install/default/lib/httpkit/transports/httpkit_transports__Http.cmx" {"transports/httpkit_transports__Http.cmx"}
+  "_build/install/default/lib/httpkit/transports/httpkit_transports__Https.cmi" {"transports/httpkit_transports__Https.cmi"}
+  "_build/install/default/lib/httpkit/transports/httpkit_transports__Https.cmt" {"transports/httpkit_transports__Https.cmt"}
+  "_build/install/default/lib/httpkit/transports/httpkit_transports__Https.cmx" {"transports/httpkit_transports__Https.cmx"}
+  "_build/install/default/lib/httpkit/transports/httpkit_transports__Transports.cmi" {"transports/httpkit_transports__Transports.cmi"}
+  "_build/install/default/lib/httpkit/transports/httpkit_transports__Transports.cmt" {"transports/httpkit_transports__Transports.cmt"}
+  "_build/install/default/lib/httpkit/transports/httpkit_transports__Transports.cmx" {"transports/httpkit_transports__Transports.cmx"}
 ]
 bin: [
   "_build/install/default/bin/echottp" {"echottp"}

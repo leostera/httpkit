@@ -15,7 +15,7 @@ type headers = list((string, string));
 type path = list(string);
 
 type route_handler('a) =
-  ('a, path) =>
+  (Middleware.ctx('a), path) =>
   [
     | `OK(string)
     | `With_headers(Httpaf.Status.t, headers, string)
@@ -29,7 +29,7 @@ let router:
   (handler, ctx) => {
     let path = ctx.req.target |> String.split_on_char('/') |> List.tl;
     let (status, headers, response) =
-      switch (handler(ctx.state, path)) {
+      switch (handler(ctx, path)) {
       | `OK(response) => (`OK, [], response)
       | `With_status(status, response) => (status, [], response)
       | `With_headers(status, headers, response) => (

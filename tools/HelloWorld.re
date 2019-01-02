@@ -10,14 +10,15 @@ module App = {
   let on_start = () => Logs.app(m => m("Running on localhost:9999"));
   type state = {random: string};
   let initial_state = {random: Random.float(0.1) |> string_of_float};
-  let route_handler = (state, path) =>
-    switch (path) {
-    | [""] => `OK("hello world #" ++ state.random)
-    | ["err"] => `With_status((`Uniauth, "Yikes! Login first."))
-    | ["with", "code", code] =>
-      `With_status((code |> Httpaf.Status.of_string, ""))
-    | _ => `Unmatched
-    };
+  let route_handler: Httpkit.Server.Common.route_handler(state) =
+    (ctx, path) =>
+      switch (path) {
+      | [""] => `OK("hello world #" ++ ctx.state.random)
+      | ["err"] => `With_status((`Unauthorized, "Yikes! Login first."))
+      | ["with", "code", code] =>
+        `With_status((code |> Httpaf.Status.of_string, ""))
+      | _ => `Unmatched
+      };
 };
 
 Httpkit.(

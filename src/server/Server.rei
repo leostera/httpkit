@@ -40,7 +40,7 @@ module Common: {
   type path = list(string);
 
   type route_handler('a) =
-    ('a, path) =>
+    (Middleware.ctx('a), path) =>
     [
       | `OK(string)
       | `With_headers(Httpaf.Status.t, headers, string)

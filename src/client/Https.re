@@ -1,3 +1,12 @@
+/**
+  This module was originally written during one of the [ReasonableCoding]
+  live-streams for the Twitchboard project.
+
+  Special thanks to @anmonteiro for guiding me through the whole process.
+
+  Loosely based on examples from httpaf-lwt, ocaml-tls, and this gist from
+  @anmonteiro: https://gist.github.com/anmonteiro/794d2713e787690ef16c684360a4d39f
+  */
 let writev = (tls_client, _fd, io_vecs) =>
   Lwt.(
     catch(

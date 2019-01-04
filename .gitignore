@@ -3,3 +3,4 @@ _public
 .merlin
 /lua
 /lua_modules
+*.install

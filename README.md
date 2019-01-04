@@ -66,6 +66,16 @@ You can install by pinning with opam:
 $ opam pin add httpkit git+https://github.com/ostera/httpkit
 ```
 
+Worth noting that currently a few fixes to it's direct dependencies are needed,
+all of them by @anmonteiro 🙌 — you can install those fixes by pinning these
+dependencies:
+
+```sh
+$ opam pin add httpaf git+https://github.com/anmonteiro/httpaf#cherry-picking
+$ opam pin add httpaf-lwt git+https://github.com/anmonteiro/httpaf#anmonteiro/pluggable-read-write
+$ opam pin add tls git+https://github.com/anmonteiro/ocaml-tls#anmonteiro/fix-reading-last-chunk-when-eof
+```
+
 ## Common Middleware
 
 As I start using `httpkit` in other projects, I'm quickly realizing there's a family of very common middleware that should be bundled as part of the library to 

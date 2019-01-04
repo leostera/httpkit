@@ -7,7 +7,7 @@ delightful to use, impossible to misuse, and blazingly fast.
 It was born out of necessity really, while working on the `twitchboard` cli
 tool during one of the [ReasonableCoding](https://twitch.tv/ostera) streams,
 because working directly with
-[`http/af`](https://github.com/inhabitedtype/httaf) is quite low-level.
+[`http/af`](https://github.com/inhabitedtype/httpaf) is quite low-level.
 
 1. [Getting Started](#getting-started)
 2. [Common Middleware](#common-middleware)

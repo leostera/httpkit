@@ -1,9 +1,0 @@
-(library
-  (name httpkit_transports)
-  (public_name httpkit.transports)
-  (libraries
-    httpkit_server
-    fmt logs logs.lwt
-    httpaf httpaf-lwt tls tls.lwt uri
-    lwt lwt.unix
-    ))

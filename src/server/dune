@@ -1,8 +1,4 @@
 (library
   (name httpkit_server)
   (public_name httpkit.server)
-  (libraries
-    fmt logs logs.lwt
-    httpaf httpaf-lwt tls tls.lwt uri
-    lwt lwt.unix
-    ))
+  (libraries fmt logs httpaf uri))

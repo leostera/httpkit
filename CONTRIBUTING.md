@@ -5,14 +5,20 @@ without much handholding.
 
 ## Project Structure
 
-The project is structured in 4 different packages:
+The project is structured in 2 different packages:
 
-1. `Httpkit`, the main public API of Httpkit
-2. `Client`, containing code related to making requests
-3. `Server`, with the middleware stack for building servers
-4. `Transports`, the HTTP/HTTPS implementations used by Client and Server
+1. `httpkit`, the main library
+2. `httpkit-lwt`, the Lwt bindings
 
-### Httpkit.Client
+
+### `httpkit`
+
+HttpKit keeps the core datatypes for working with the DSLs, including functors
+and interfaces for creating new backend bindings.
+
+It's structured in the following libraries:
+
+#### Httpkit.Client
 
 In this module you will find submodules for handling responses, and functions
 for making requests to servers.
@@ -20,7 +26,7 @@ for making requests to servers.
 * `Response`, with utility functions for handling responses (such as extracting
   its body).
 
-### Httpkit.Server
+#### Httpkit.Server
 
 This module includes the core datatypes used to build up safe servers.
 
@@ -30,10 +36,12 @@ It also has the following submodules:
 * `Middleware`, the underlying middleware stack.
 * `Common`, common middleware such as `log` or `router`.
 
-### Httpkit.Transports
+## `httpkit-lwt`
 
-This module includes bindings to Lwt that can be used to run a server over HTTP.
+This module includes bindings to an Lwt backend that can be used to run a
+server over HTTP, and make requests over HTTPS.
 
-It is clear that this module should be part of a different library,
-`httpkit-lwt`, and include bindings for both the `Httpkit.Server` and
-`Httpkit.Client` modules.
+It includes two libraries:
+
+* `Httpkit_lwt.Client`
+* `Httpkit_lwt.Server`

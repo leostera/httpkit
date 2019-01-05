@@ -61,7 +61,8 @@ think! 🙌🏼
 You can install by pinning with opam:
 
 ```sh
-$ opam pin add httpkit git+https://github.com/ostera/httpkit
+$ opam pin add httpkit     git+https://github.com/ostera/httpkit
+$ opam pin add httpkit-lwt git+https://github.com/ostera/httpkit
 ```
 
 Worth noting that currently a few fixes to it's direct dependencies are needed,

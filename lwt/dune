@@ -1,0 +1,4 @@
+(library
+  (name httpkit_lwt)
+  (public_name httpkit.lwt)
+  (libraries httpkit httpkit.lwt.client httpkit.lwt.server))

@@ -1,0 +1,19 @@
+opam-version: "2.0"
+name: "httpkit-lwt"
+version: "0.7"
+synopsis: "High-level, High-performance HTTP(S) Clients/Servers with Lwt"
+maintainer: "Leandro Ostera <leandro@ostera.io>"
+authors: "Leandro Ostera <leandro@ostera.io>"
+license: "MIT"
+homepage: "https//github.com/ostera/httpkit"
+bug-reports: "https//github.com/ostera/httpkit/issues"
+depends: [
+  "httpkit"
+  "httpaf-lwt"
+  "lwt"
+
+  "dune" {build}
+  "reason" {build}
+]
+build: [make "build"]
+install: [make "install"]

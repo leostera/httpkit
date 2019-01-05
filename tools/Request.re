@@ -15,7 +15,7 @@ switch (
   |> Httpkit_lwt.Client.Https.send(
        ~headers=[("User-Agent", "Reason HttpKit")],
      )
-  >>= Httpkit.Client.Response.body
+  >>= Httpkit_lwt.Client.Response.body
   |> Lwt_main.run
 ) {
 | exception e => Logs.err(m => m("%s", Printexc.to_string(e)))

@@ -33,12 +33,10 @@ section that can give you a better idea of how to use the libraries. In short:
 For making a request:
 
 ```reason
-Httpkit.Client.(
-  Uri.of_string("https://api.github.com/users/ostera")
-  |> Https.send(~headers=[("User-Agent", "Reason HttpKit")])
-  >>= Response.body
-  |> Lwt_main.run
-);
+Uri.of_string("https://api.github.com/users/ostera")
+|> Httpkit_lwt.Client.Http.send(~headers=[("User-Agent", "Reason HttpKit")])
+>>= Httpkit.Client.Response.body
+|> Lwt_main.run
 ```
 
 For making a server:
@@ -49,8 +47,8 @@ Httpkit.Server.(
   |> use(Common.log)
   |> use(App.inc)
   |> reply(App.json)
-  |> Httpkit.Http.listen(~port=9999, ~on_start)
-/*|> Httpkit.Https.listen(~port=9999, ~on_start, ~key, ~cert) */
+  |> Httpkit_lwt.Server.Http.listen(~port=9999, ~on_start)
+/*|> Httpkit_lwt.Server.Https.listen(~port=9999, ~on_start, ~key, ~cert) */
   |> Lwt_main.run
 );
 ```

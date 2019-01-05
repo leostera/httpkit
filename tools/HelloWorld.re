@@ -26,7 +26,7 @@ Httpkit.(
     make(App.initial_state)
     |> use(Common.log)
     |> reply(Common.router(App.route_handler))
-    |> Http.listen(~port=9999, ~on_start=App.on_start)
+    |> Httpkit_lwt.Server.Http.listen(~port=9999, ~on_start=App.on_start)
     |> Lwt_main.run
   )
 );

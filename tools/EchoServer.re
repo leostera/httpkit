@@ -32,9 +32,9 @@ Httpkit.Server.(
   |> use(Httpkit.Server.Common.log)
   |> use(App.inc)
   |> reply(App.json)
-  |> Httpkit.Http.listen(~port=9999, ~on_start)
+  |> Httpkit_lwt.Server.Http.listen(~port=9999, ~on_start)
   /*
-   |> Httpkit.Https.listen(~port=9999, ~on_start, ~key, ~cert)
+   |> Httpkit_lwt.Https.listen(~port=9999, ~on_start, ~key, ~cert)
    */
   |> Lwt_main.run
 );

@@ -1,25 +1,29 @@
 (executable
+  (package httpkit-lwt)
   (name HelloWorld)
   (modules HelloWorld)
   (public_name helloworld)
 	(ocamlopt_flags -O3)
-  (libraries httpkit logs.fmt fmt.tty lwt))
+  (libraries httpkit.lwt httpkit logs.fmt fmt.tty lwt))
 
 (executable
+  (package httpkit-lwt)
   (name Request)
   (public_name request)
   (modules Request)
 	(ocamlopt_flags -O3)
-  (libraries httpkit logs.fmt fmt.tty))
+  (libraries httpkit.lwt httpkit logs.fmt fmt.tty))
 
 (executable
+  (package httpkit-lwt)
   (name EchoServer)
   (modules EchoServer)
   (public_name echottp)
 	(ocamlopt_flags -O3)
-  (libraries httpkit logs.fmt fmt.tty lwt))
+  (libraries httpkit.lwt httpkit logs.fmt fmt.tty lwt))
 
 (executable
+  (package httpkit-lwt)
   (name RawEchoServer)
   (modules RawEchoServer)
   (public_name rawechottp)

@@ -12,7 +12,9 @@ Logs.set_reporter(Logs_fmt.reporter());
 switch (
   "https://api.github.com/users/ostera"
   |> Uri.of_string
-  |> Httpkit.Client.Https.send(~headers=[("User-Agent", "Reason HttpKit")])
+  |> Httpkit_lwt.Client.Https.send(
+       ~headers=[("User-Agent", "Reason HttpKit")],
+     )
   >>= Httpkit.Client.Response.body
   |> Lwt_main.run
 ) {

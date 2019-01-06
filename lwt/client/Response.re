@@ -3,11 +3,10 @@ open Lwt.Infix;
 module M: Httpkit.Client.Response.S with type io('a) = Lwt.t('a) =
   Httpkit.Client.Response.Make({
     type io('a) = Lwt.t('a);
-    let body = ((response, body)) => {
+    let body = ((_response, body)) => {
       let buffer = Buffer.create(1024);
       let (next, wakeup) = Lwt.wait();
-      switch (Httpaf.Response.(response.status)) {
-      | `OK =>
+      Lwt.async(() => {
         let rec read_response = () =>
           Httpaf.Body.schedule_read(
             body,
@@ -27,15 +26,10 @@ module M: Httpkit.Client.Response.S with type io('a) = Lwt.t('a) =
                 read_response();
               },
           );
-        read_response();
-      | _ =>
-        Logs.err(m =>
-          m("Https.Response.read_body: %s", "Something went wrong")
-        );
-        Lwt.wakeup_later(wakeup, Error(`Reading_error));
-      };
+        read_response() |> Lwt.return;
+      })
+      |> ignore;
       next >>= Lwt_result.lift;
     };
   });
-
 include M;

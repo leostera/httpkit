@@ -34,8 +34,9 @@ For making a request:
 
 ```reason
 Httpkit_lwt.Client.(
-  Uri.of_string("https://api.github.com/users/ostera")
+  Uri.of_string("http://api.github.com/users/ostera")
   |> Http.send(~headers=[("User-Agent", "Reason HttpKit")])
+/*|> Https.send(~headers=[("User-Agent", "Reason HttpKit")]) */
   >>= Response.body
   |> Lwt_main.run
 );

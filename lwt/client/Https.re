@@ -67,79 +67,93 @@ let read = (tls_client, fd, buffer) =>
     )
   );
 
-let send = (~trace=?, ~meth=`GET, ~headers=[], ~body=?, uri) => {
-  open Httpaf;
-  open Lwt.Infix;
-  let response_handler = (notify_response_received, response, response_body) =>
-    Lwt.wakeup_later(
-      notify_response_received,
-      (response, response_body) |> Lwt_result.return,
-    );
+module M: Httpkit.Client.Request.S with type io('a) = Lwt.t('a) =
+  Httpkit.Client.Request.Make({
+    type io('a) = Lwt.t('a);
+    let send = (~trace=?, ~meth=`GET, ~headers=[], ~body=?, uri) => {
+      open Httpaf;
+      open Lwt.Infix;
+      let response_handler =
+          (notify_response_received, response, response_body) =>
+        Lwt.wakeup_later(
+          notify_response_received,
+          (response, response_body) |> Lwt_result.return,
+        );
 
-  let error_handler = (notify_response_received, error) =>
-    Lwt.wakeup_later(
-      notify_response_received,
-      `Connection_error(error) |> Lwt_result.fail,
-    );
+      let error_handler = (notify_response_received, error) =>
+        Lwt.wakeup_later(
+          notify_response_received,
+          `Connection_error(error) |> Lwt_result.fail,
+        );
 
-  let host = Uri.host_with_default(uri);
-  Lwt_unix.getaddrinfo(host, "443", [Unix.(AI_FAMILY(PF_INET))])
-  >>= (
-    addresses => {
-      let socket_addr = List.hd(addresses).Unix.ai_addr;
-      let socket = Lwt_unix.socket(Unix.PF_INET, Unix.SOCK_STREAM, 0);
-
-      Lwt_unix.connect(socket, socket_addr)
-      >>= (_ => X509_lwt.authenticator(`No_authentication_I'M_STUPID))
+      let host = Uri.host_with_default(uri);
+      Lwt_unix.getaddrinfo(host, "443", [Unix.(AI_FAMILY(PF_INET))])
       >>= (
-        authenticator => {
-          let client = Tls.Config.client(~authenticator, ());
-          switch (trace) {
-          | Some(tracer) =>
-            Tls_lwt.Unix.client_of_fd(~trace=tracer, client, ~host, socket)
-          | None => Tls_lwt.Unix.client_of_fd(client, ~host, socket)
-          };
-        }
-      )
-      >>= (
-        tls_client => {
-          let content_length =
-            switch (body) {
-            | None => "0"
-            | Some(body) => body |> String.length |> string_of_int
-            };
+        addresses => {
+          let socket_addr = List.hd(addresses).Unix.ai_addr;
+          let socket = Lwt_unix.socket(Unix.PF_INET, Unix.SOCK_STREAM, 0);
 
-          let headers =
-            Headers.of_list(
-              [("Host", host), ("Content-Length", content_length)] @ headers,
-            );
-          let path = uri |> Uri.path_and_query;
-          let request = Request.create(meth, path, ~headers);
+          Lwt_unix.connect(socket, socket_addr)
+          >>= (_ => X509_lwt.authenticator(`No_authentication_I'M_STUPID))
+          >>= (
+            authenticator => {
+              let client = Tls.Config.client(~authenticator, ());
+              switch (trace) {
+              | Some(tracer) =>
+                Tls_lwt.Unix.client_of_fd(
+                  ~trace=tracer,
+                  client,
+                  ~host,
+                  socket,
+                )
+              | None => Tls_lwt.Unix.client_of_fd(client, ~host, socket)
+              };
+            }
+          )
+          >>= (
+            tls_client => {
+              let content_length =
+                switch (body) {
+                | None => "0"
+                | Some(body) => body |> String.length |> string_of_int
+                };
 
-          let (response_received, notify_response_received) = Lwt.wait();
-          let response_handler = response_handler(notify_response_received);
-          let error_handler = error_handler(notify_response_received);
+              let headers =
+                Headers.of_list(
+                  [("Host", host), ("Content-Length", content_length)]
+                  @ headers,
+                );
+              let path = uri |> Uri.path_and_query;
+              let request = Request.create(meth, path, ~headers);
 
-          let request_body =
-            Httpaf_lwt.Client.request(
-              ~writev=writev(tls_client),
-              ~read=read(tls_client),
-              socket,
-              request,
-              ~error_handler,
-              ~response_handler,
-            );
+              let (response_received, notify_response_received) = Lwt.wait();
+              let response_handler =
+                response_handler(notify_response_received);
+              let error_handler = error_handler(notify_response_received);
 
-          switch (body) {
-          | Some(body) => Body.write_string(request_body, body)
-          | None => ()
-          };
-          Body.flush(request_body, () => Body.close_writer(request_body));
+              let request_body =
+                Httpaf_lwt.Client.request(
+                  ~writev=writev(tls_client),
+                  ~read=read(tls_client),
+                  socket,
+                  request,
+                  ~error_handler,
+                  ~response_handler,
+                );
 
-          /* TODO(@ostera): Better idiom for this? */
-          response_received >>= (result => result);
+              switch (body) {
+              | Some(body) => Body.write_string(request_body, body)
+              | None => ()
+              };
+              Body.flush(request_body, () => Body.close_writer(request_body));
+
+              /* TODO(@ostera): Better idiom for this? */
+              response_received >>= (result => result);
+            }
+          );
         }
       );
-    }
-  );
-};
+    };
+  });
+
+include M;

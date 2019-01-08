@@ -12,9 +12,12 @@ let https_url = "https://api.github.com/users/ostera";
 Logs.app(m => m("Requesting: %s", https_url));
 switch (
   Httpkit_lwt.Client.(
-    https_url
-    |> Uri.of_string
-    |> Https.send(~headers=[("User-Agent", "Reason HttpKit")])
+    Httpkit.Client.Request.create(
+      ~headers=[("User-Agent", "Reason HttpKit")],
+      `GET,
+      https_url |> Uri.of_string,
+    )
+    |> Https.send
     >>= Response.body
     |> Lwt_main.run
   )
@@ -26,12 +29,15 @@ switch (
 
 /* NOTE: the HelloWorld server in tools/HelloWorld.re can help you run this :) */
 let http_url = "http://localhost:9999/awesome/posum";
-Logs.app(m => m("Requesting: %s", https_url));
+Logs.app(m => m("Requesting: %s", http_url));
 switch (
   Httpkit_lwt.Client.(
-    http_url
-    |> Uri.of_string
-    |> Http.send(~headers=[("User-Agent", "Reason HttpKit")])
+    Httpkit.Client.Request.create(
+      ~headers=[("User-Agent", "Reason HttpKit")],
+      `GET,
+      http_url |> Uri.of_string,
+    )
+    |> Http.send
     >>= Response.body
     |> Lwt_main.run
   )

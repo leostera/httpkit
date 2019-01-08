@@ -13,9 +13,10 @@ depends: [
   "logs"
   "tls"
   "uri"
+  "fpath"
 
   "dune" {build}
   "reason" {build}
 ]
-build: [make "build"]
-install: [make "install"]
+build: ["dune" "build" "-p" name]
+install: ["dune" "install" name "--prefix" prefix "--root" "."]

@@ -8,7 +8,7 @@ install:
 
 .PHONY: build
 build:
-	dune build
+	dune build -p httpkit
 
 .PHONY: watch
 watch:

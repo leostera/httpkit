@@ -48,9 +48,11 @@ module type S = {
 
   let send:
     (~config: config=?, t) =>
-    Lwt_result.t(
-      (Httpaf.Response.t, Httpaf.Body.t([ | `read])),
-      [> | `Connection_error(Httpaf.Client_connection.error)],
+    io(
+      result(
+        (Httpaf.Response.t, Httpaf.Body.t([ | `read])),
+        [> | `Connection_error(Httpaf.Client_connection.error)],
+      ),
     );
 };
 

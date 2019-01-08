@@ -92,8 +92,8 @@ You can install by dropping the following dependencies in your `package.json`:
     // ...
   },
   "resolutions": {
-    "@opam/httpkit": "ostera/httpkit:httpkit.opam#555595a",
-    "@opam/httpkit-lwt": "ostera/httpkit:httpkit-lwt.opam#555595a",
+    "@opam/httpkit": "ostera/httpkit:httpkit.opam#322ca26",
+    "@opam/httpkit-lwt": "ostera/httpkit:httpkit-lwt.opam#322ca26",
     "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#57e9dd2",
     "@opam/httpaf-lwt": "anmonteiro/httpaf:httpaf-lwt.opam#57e9dd2",
     // ...

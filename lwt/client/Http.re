@@ -1,9 +1,18 @@
-module M: Httpkit.Client.Request.S with type io('a) = Lwt.t('a) =
+module M:
+  Httpkit.Client.Request.S with
+    type io('a) = Lwt.t('a) and type config = unit =
   Httpkit.Client.Request.Make({
     type io('a) = Lwt.t('a);
-    let send = (~trace as _=?, ~meth=`GET, ~headers=[], ~body=?, uri) => {
-      open Httpaf;
+
+    type config = unit;
+
+    let send = (~config as _=?, req) => {
       open Lwt.Infix;
+      open Httpkit.Client;
+
+      let body = Request.body(req);
+      let uri = Request.uri(req);
+
       let response_handler =
           (notify_response_received, response, response_body) =>
         Lwt.wakeup_later(
@@ -32,19 +41,7 @@ module M: Httpkit.Client.Request.S with type io('a) = Lwt.t('a) =
           Lwt_unix.connect(socket, socket_addr)
           >>= (
             () => {
-              let content_length =
-                switch (body) {
-                | None => "0"
-                | Some(body) => body |> String.length |> string_of_int
-                };
-
-              let headers =
-                Headers.of_list(
-                  [("Host", host), ("Content-Length", content_length)]
-                  @ headers,
-                );
-              let path = uri |> Uri.path_and_query;
-              let request = Request.create(meth, path, ~headers);
+              let request = Request.as_httpaf(req);
 
               let (response_received, notify_response_received) = Lwt.wait();
               let response_handler =
@@ -60,10 +57,12 @@ module M: Httpkit.Client.Request.S with type io('a) = Lwt.t('a) =
                 );
 
               switch (body) {
-              | Some(body) => Body.write_string(request_body, body)
+              | Some(body) => Httpaf.Body.write_string(request_body, body)
               | None => ()
               };
-              Body.flush(request_body, () => Body.close_writer(request_body));
+              Httpaf.Body.flush(request_body, () =>
+                Httpaf.Body.close_writer(request_body)
+              );
 
               /* TODO(@ostera): Better idiom for this? */
               response_received >>= (result => result);

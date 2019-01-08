@@ -59,7 +59,7 @@ Httpkit.Server.(
 I encourage you to read on through the Principles and let me know what you
 think! 🙌🏼
 
-#### Installing
+#### Installing with opam
 
 You can install by pinning with opam:
 
@@ -77,6 +77,33 @@ $ opam pin add httpaf git+https://github.com/anmonteiro/httpaf#cherry-picking
 $ opam pin add httpaf-lwt git+https://github.com/anmonteiro/httpaf#anmonteiro/pluggable-read-write
 $ opam pin add tls git+https://github.com/anmonteiro/ocaml-tls#anmonteiro/fix-reading-last-chunk-when-eof
 ```
+
+#### Installing with esy
+
+You can install by dropping the following dependencies in your `package.json`:
+
+```json
+{
+  "dependencies": {
+    "@opam/httpkit": "*",
+    "@opam/httpkit-lwt": "*",
+    "@opam/logs": "*",
+    "@opam/fmt": "*",
+    // ...
+  },
+  "resolutions": {
+    "@opam/httpkit": "ostera/httpkit:httpkit.opam#322ca26",
+    "@opam/httpkit-lwt": "ostera/httpkit:httpkit-lwt.opam#322ca26",
+    "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#57e9dd2",
+    "@opam/httpaf-lwt": "anmonteiro/httpaf:httpaf-lwt.opam#57e9dd2",
+    // ...
+  }
+}
+
+```
+
+> NOTE: Make sure you're using the latest commit hash!
+
 
 ## Common Middleware
 

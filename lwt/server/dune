@@ -1,5 +1,5 @@
 (library
   (name httpkit_lwt_server)
-  (public_name httpkit.lwt.server)
+  (public_name httpkit-lwt.server)
   (libraries httpkit httpaf-lwt lwt lwt.unix tls tls.lwt))
 

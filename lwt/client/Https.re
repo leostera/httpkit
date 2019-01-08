@@ -1,3 +1,5 @@
+open Lwt.Infix;
+
 /**
   This module was originally written during one of the [ReasonableCoding]
   live-streams for the Twitchboard project.
@@ -7,71 +9,85 @@
   Loosely based on examples from httpaf-lwt, ocaml-tls, and this gist from
   @anmonteiro: https://gist.github.com/anmonteiro/794d2713e787690ef16c684360a4d39f
   */
-let writev = (tls_client, _fd, io_vecs) =>
-  Lwt.(
-    catch(
-      () => {
-        let {Faraday.len, buffer, off} = io_vecs |> List.hd;
-        Cstruct.of_bigarray(~len, ~off, buffer)
-        |> Tls_lwt.Unix.write(tls_client)
-        >|= (_ => `Ok(len));
-      },
-      exn =>
-        switch (exn) {
-        | Unix.Unix_error(Unix.EBADF, "check_descriptor", _) =>
-          Lwt.return(`Closed)
-        | exn =>
-          Logs_lwt.err(m => m("failed: %s", Printexc.to_string(exn)))
-          >>= (() => Lwt.fail(exn))
-        },
-    )
-  );
 
-let read = (tls_client, fd, buffer) =>
-  Lwt.(
-    catch(
-      () =>
-        Httpaf_lwt.Buffer.put(buffer, ~f=(bigstring, ~off, ~len) =>
-          Tls_lwt.Unix.read_bytes(tls_client, bigstring, off, len)
-        ),
-      exn => {
-        let err = Printexc.to_string(exn);
-        (
-          switch (Lwt_unix.state(fd)) {
-          | Lwt_unix.Closed =>
-            Logs_lwt.err(m => m("Https.read: Socket closed"))
-          | Aborted(exn) =>
-            Logs_lwt.err(m =>
-              m("Https.read: Socket aborted: %s", Printexc.to_string(exn))
-            )
-          | Opened =>
-            Logs_lwt.err(m => m("Https.read: Socket opened! %s", err))
-          }
-        )
+type tls_config = {
+  tracer: option(Tls_lwt.tracer),
+  tls_client:
+    (Httpkit.Client.Request.t, Lwt_unix.file_descr) => Lwt.t(Tls_lwt.Unix.t),
+};
+
+type tls_auth = [
+  | `Ca_dir(string)
+  | `Ca_file(string)
+  | `Hex_key_fingerprints(Nocrypto.Hash.hash, list((string, string)))
+  | `Key_fingerprints(Nocrypto.Hash.hash, list((string, Cstruct.t)))
+  | `No_authentication_I'M_STUPID
+];
+
+module Config = {
+  let from_pems = (~tracer=?, ~cert, ~priv_key, ()) => {
+    {
+      tracer,
+      tls_client: (req, socket) => {
+        let host = Httpkit.Client.Request.uri(req) |> Uri.host_with_default;
+        X509_lwt.authenticator(`Ca_file(cert))
         >>= (
-          _ => {
-            Logs.err(m => m("Https.read: Failing..."));
-            Lwt.async(() => Tls_lwt.Unix.close(tls_client));
-            Lwt.fail(exn);
+          authenticator =>
+            X509_lwt.private_of_pems(~cert, ~priv_key)
+            >>= (
+              certificate => {
+                let client =
+                  Tls.Config.client(
+                    ~authenticator,
+                    ~certificates=`Single(certificate),
+                    (),
+                  );
+                switch (tracer) {
+                | Some(tracer) =>
+                  Tls_lwt.Unix.client_of_fd(
+                    ~trace=tracer,
+                    client,
+                    ~host,
+                    socket,
+                  )
+                | _ => Tls_lwt.Unix.client_of_fd(client, ~host, socket)
+                };
+              }
+            )
+        );
+      },
+    };
+  };
+  let no_auth = (~tracer=?, ()) => {
+    {
+      tracer,
+      tls_client: (req, socket) => {
+        let host = Httpkit.Client.Request.uri(req) |> Uri.host_with_default;
+        X509_lwt.authenticator(`No_authentication_I'M_STUPID)
+        >>= (
+          authenticator => {
+            let client = Tls.Config.client(~authenticator, ());
+            switch (tracer) {
+            | Some(tracer) =>
+              Tls_lwt.Unix.client_of_fd(~trace=tracer, client, ~host, socket)
+            | _ => Tls_lwt.Unix.client_of_fd(client, ~host, socket)
+            };
           }
         );
       },
-    )
-    >|= (
-      bytes_read =>
-        if (bytes_read == 0) {
-          `Eof;
-        } else {
-          `Ok(bytes_read);
-        }
-    )
-  );
+    };
+  };
+};
 
-module M: Httpkit.Client.Request.S with type io('a) = Lwt.t('a) =
+module M:
+  Httpkit.Client.Request.S with
+    type io('a) = Lwt.t('a) and type config = tls_config =
   Httpkit.Client.Request.Make({
     type io('a) = Lwt.t('a);
-    let send = (~trace=?, req) => {
-      open Lwt.Infix;
+
+    type config = tls_config;
+
+    let send = (~config=?, req) => {
       open Httpkit.Client;
 
       let body = Request.body(req);
@@ -98,19 +114,11 @@ module M: Httpkit.Client.Request.S with type io('a) = Lwt.t('a) =
           let socket = Lwt_unix.socket(Unix.PF_INET, Unix.SOCK_STREAM, 0);
 
           Lwt_unix.connect(socket, socket_addr)
-          >>= (_ => X509_lwt.authenticator(`No_authentication_I'M_STUPID))
           >>= (
-            authenticator => {
-              let client = Tls.Config.client(~authenticator, ());
-              switch (trace) {
-              | Some(tracer) =>
-                Tls_lwt.Unix.client_of_fd(
-                  ~trace=tracer,
-                  client,
-                  ~host,
-                  socket,
-                )
-              | None => Tls_lwt.Unix.client_of_fd(client, ~host, socket)
+            _ => {
+              switch (config) {
+              | Some({tls_client, _}) => tls_client(req, socket)
+              | None => Config.no_auth().tls_client(req, socket)
               };
             }
           )
@@ -125,8 +133,8 @@ module M: Httpkit.Client.Request.S with type io('a) = Lwt.t('a) =
 
               let request_body =
                 Httpaf_lwt.Client.request(
-                  ~writev=writev(tls_client),
-                  ~read=read(tls_client),
+                  ~writev=Tls_io.writev(tls_client),
+                  ~read=Tls_io.read(tls_client),
                   socket,
                   request,
                   ~error_handler,

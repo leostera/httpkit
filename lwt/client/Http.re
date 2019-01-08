@@ -1,7 +1,12 @@
-module M: Httpkit.Client.Request.S with type io('a) = Lwt.t('a) =
+module M:
+  Httpkit.Client.Request.S with
+    type io('a) = Lwt.t('a) and type config = unit =
   Httpkit.Client.Request.Make({
     type io('a) = Lwt.t('a);
-    let send = (~trace as _=?, req) => {
+
+    type config = unit;
+
+    let send = (~config as _=?, req) => {
       open Lwt.Infix;
       open Httpkit.Client;
 

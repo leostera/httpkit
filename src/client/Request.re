@@ -44,16 +44,22 @@ let uri = req => req.uri;
 module type S = {
   type io('a);
 
+  type config;
+
   let send:
-    (~trace: Tls_lwt.tracer=?, t) =>
+    (~config: config=?, t) =>
     Lwt_result.t(
       (Httpaf.Response.t, Httpaf.Body.t([ | `read])),
       [> | `Connection_error(Httpaf.Client_connection.error)],
     );
 };
 
-module Make = (M: S) : (S with type io('a) = M.io('a)) => {
+module Make =
+       (M: S)
+       : (S with type io('a) = M.io('a) and type config = M.config) => {
   type io('a) = M.io('a);
+
+  type config = M.config;
 
   let send = M.send;
 };

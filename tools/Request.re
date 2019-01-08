@@ -43,8 +43,8 @@ switch (
 let https_url = "https://api.github.com/users/ostera";
 let tls_config =
   Httpkit_lwt.Client.Https.Config.from_pems(
-    ~cert="./cert.pem",
-    ~priv_key="./priv_key",
+    ~cert="./cert.pem" |> Fpath.v,
+    ~priv_key="./priv_key" |> Fpath.v,
     (),
   );
 

@@ -30,10 +30,13 @@ module Config = {
       tracer,
       tls_client: (req, socket) => {
         let host = Httpkit.Client.Request.uri(req) |> Uri.host_with_default;
-        X509_lwt.authenticator(`Ca_file(cert))
+        X509_lwt.authenticator(`Ca_file(cert |> Fpath.to_string))
         >>= (
           authenticator =>
-            X509_lwt.private_of_pems(~cert, ~priv_key)
+            X509_lwt.private_of_pems(
+              ~cert=cert |> Fpath.to_string,
+              ~priv_key=priv_key |> Fpath.to_string,
+            )
             >>= (
               certificate => {
                 let client =

@@ -45,6 +45,7 @@ let tls_config =
   Httpkit_lwt.Client.Https.Config.from_pems(
     ~cert="./cert.pem" |> Fpath.v,
     ~priv_key="./priv_key" |> Fpath.v,
+    ~ca="./cert.pem" |> Fpath.v,
     (),
   );
 

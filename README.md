@@ -37,7 +37,7 @@ let req =
   Httpkit.Client.Request.create(
     ~headers=[("User-Agent", "Reason HttpKit")],
     `GET,
-    Uri.of_string("http://api.github.com/users/ostera"),
+    Uri.of_string("http://api.github.com/repos/ostera/httpkit"),
   );
 
 Httpkit_lwt.Client.(

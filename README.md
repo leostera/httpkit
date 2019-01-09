@@ -33,10 +33,17 @@ section that can give you a better idea of how to use the libraries. In short:
 For making a request:
 
 ```reason
+let req =
+  Httpkit.Client.Request.create(
+    ~headers=[("User-Agent", "Reason HttpKit")],
+    `GET,
+    Uri.of_string("http://api.github.com/users/ostera"),
+  );
+
 Httpkit_lwt.Client.(
-  Uri.of_string("http://api.github.com/users/ostera")
-  |> Http.send(~headers=[("User-Agent", "Reason HttpKit")])
-/*|> Https.send(~headers=[("User-Agent", "Reason HttpKit")]) */
+  req
+  |> Http.send
+  /*|> Https.send(~config=Https.Config.from_pems(~cert, ~priv_key)) */
   >>= Response.body
   |> Lwt_main.run
 );

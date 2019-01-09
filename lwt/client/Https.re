@@ -25,12 +25,12 @@ type tls_auth = [
 ];
 
 module Config = {
-  let from_pems = (~tracer=?, ~cert, ~priv_key, ()) => {
+  let from_pems = (~tracer=?, ~cert, ~priv_key, ~ca, ()) => {
     {
       tracer,
       tls_client: (req, socket) => {
         let host = Httpkit.Client.Request.uri(req) |> Uri.host_with_default;
-        X509_lwt.authenticator(`Ca_file(cert |> Fpath.to_string))
+        X509_lwt.authenticator(`Ca_file(ca |> Fpath.to_string))
         >>= (
           authenticator =>
             X509_lwt.private_of_pems(

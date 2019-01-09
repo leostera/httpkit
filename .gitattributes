@@ -1,1 +1,5 @@
 bench/* linguist-vendored
+*.re linguist-language=Reason
+*.rei linguist-language=Reason
+*.ml linguist-language=OCaml
+*.mli linguist-language=OCaml

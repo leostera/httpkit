@@ -11,16 +11,14 @@ let log: Middleware.t('a, 'a) =
     ctx.state;
   };
 
-module BodyParser = {
-  /** TODO: properly parse the body string as JSON
-   * - as Yojson
-   * - accepting a decoder function
-   */
-  let json: Middleware.t('a, option(string)) =
-    ctx => {
-      ctx.body_string;
-    };
-};
+/** TODO: properly parse the body string as JSON
+  * - as Yojson
+  * - accepting a decoder function
+  */
+let body_parser: Middleware.t('a, option(string)) =
+  ctx => {
+    ctx.body_string;
+  };
 
 type headers = list((string, string));
 type path = list(string);

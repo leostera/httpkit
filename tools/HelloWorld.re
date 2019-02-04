@@ -30,7 +30,7 @@ Httpkit.(
   Server.(
     make(App.initial_state)
     |> use(Common.log)
-    |> use(Common.BodyParser.json)
+    |> use(Common.body_parser)
     |> reply(Common.router(App.route_handler))
     |> Httpkit_lwt.Server.Http.listen(~port=9999, ~on_start=App.on_start)
     |> Lwt_main.run

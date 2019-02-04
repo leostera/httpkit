@@ -1,7 +1,13 @@
+open Lwt.Infix;
 open Httpkit;
 
 type request_handler =
-  (~closer: unit => unit, Unix.sockaddr) => Httpaf_lwt.Server.request_handler;
+  (
+    ~closer: unit => unit,
+    Unix.sockaddr,
+    Httpaf.Reqd.t(Lwt_unix.file_descr)
+  ) =>
+  Lwt.t(unit);
 
 type error_handler =
   (
@@ -14,7 +20,30 @@ type error_handler =
 
 let make_request_handler: Server.t('s, 'r, 'a, 'b) => request_handler =
   (server, ~closer, _client, reqd) => {
-    let req = Httpaf.Reqd.request(reqd);
+    let req = reqd |> Httpaf.Reqd.request;
+    let read_body = () => {
+      switch (req.meth) {
+      | `POST
+      | `PUT =>
+        let (next, awake) = Lwt.wait();
+
+        Lwt.async(() => {
+          let body = reqd |> Httpaf.Reqd.request_body;
+          let body_str = ref("");
+          let on_eof = () => Lwt.wakeup_later(awake, Some(body_str^));
+          let rec on_read = (request_data, ~off, ~len) => {
+            let read = Httpaf.Bigstring.to_string(~off, ~len, request_data);
+            body_str := body_str^ ++ read;
+            Httpaf.Body.schedule_read(body, ~on_read, ~on_eof);
+          };
+          Httpaf.Body.schedule_read(body, ~on_read, ~on_eof);
+          Lwt.return_unit;
+        });
+
+        next;
+      | _ => Lwt.return_none
+      };
+    };
     let respond = (~status, ~headers=?, content) => {
       let headers =
         (
@@ -28,10 +57,15 @@ let make_request_handler: Server.t('s, 'r, 'a, 'b) => request_handler =
       let res = Httpaf.Response.create(status, ~headers);
       Httpaf.Reqd.respond_with_string(reqd, res, content);
     };
-    server
-    |> Server.middleware
-    |> Server.Middleware.run(closer, respond, req)
-    |> ignore;
+    read_body()
+    >|= (
+      body_string => {
+        server
+        |> Server.middleware
+        |> Server.Middleware.run(closer, respond, req, body_string)
+        |> ignore;
+      }
+    );
   };
 
 let error_handler: error_handler =
@@ -46,8 +80,6 @@ let start:
   ) =>
   Lwt.t(unit) =
   (~port, ~on_start, ~request_handler, ~error_handler) => {
-    open Lwt.Infix;
-
     let (forever, awaker) = Lwt.wait();
     let closer = () => Lwt.wakeup_later(awaker, ());
 
@@ -55,7 +87,9 @@ let start:
 
     let connection_handler =
       Httpaf_lwt.Server.create_connection_handler(
-        ~request_handler=request_handler(~closer),
+        ~request_handler=
+          (client, reqd) =>
+            Lwt.async(() => request_handler(~closer, client, reqd)),
         ~error_handler,
       );
 

@@ -2,6 +2,7 @@ _esy
 _build
 _public
 .merlin
+esy.lock
 /lua
 /lua_modules
 *.install

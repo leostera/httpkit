@@ -8,6 +8,7 @@ module Middleware: {
       ) =>
       unit,
     req: Httpaf.Request.t,
+    body_string: option(string),
     closer: unit => unit,
     state: 'a,
   };
@@ -28,6 +29,7 @@ module Middleware: {
       ) =>
       unit,
       Httpaf.Request.t,
+      option(string),
       stack('i, 'o)
     ) =>
     'o;
@@ -51,6 +53,8 @@ module Common: {
   let router:
     route_handler('a) =>
     Middleware.t('a, [ | `Replied(Httpaf.Status.t, headers, string)]);
+
+  module BodyParser: {let json: Middleware.t('a, option(string));};
 };
 
 type status = [ | `Clean | `Listening | `With_middleware];

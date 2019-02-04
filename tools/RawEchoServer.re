@@ -59,11 +59,17 @@ let request_handler:
       Httpaf.Reqd.respond_with_string(reqd, res, content);
     };
     open Httpkit.Server.Middleware;
-    let ctx = {closer, req, respond, state: App.initial_state};
+    let ctx = {
+      closer,
+      req,
+      respond,
+      body_string: None,
+      state: App.initial_state,
+    };
     /* manually run middlewares */
     Common.log(ctx)
-    |> (state => App.inc({closer, req, respond, state}))
-    |> (state => App.json({closer, req, respond, state}))
+    |> (state => App.inc({closer, req, respond, body_string: None, state}))
+    |> (state => App.json({closer, req, respond, body_string: None, state}))
     |> ignore;
   };
 

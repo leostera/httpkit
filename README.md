@@ -82,7 +82,6 @@ dependencies:
 ```sh
 $ opam pin add httpaf git+https://github.com/anmonteiro/httpaf#cherry-picking
 $ opam pin add httpaf-lwt git+https://github.com/anmonteiro/httpaf#anmonteiro/pluggable-read-write
-$ opam pin add tls git+https://github.com/anmonteiro/ocaml-tls#anmonteiro/fix-reading-last-chunk-when-eof
 ```
 
 #### Installing with esy

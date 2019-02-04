@@ -11,7 +11,7 @@ depends: [
   "fmt"
   "httpaf"
   "logs"
-  "tls"
+  "tls" {>= "0.9.3"}
   "uri"
   "fpath"
 

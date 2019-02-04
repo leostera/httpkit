@@ -10,15 +10,10 @@ module App = {
   let on_start = () => Logs.app(m => m("Running on localhost:9999"));
   type state = {random: string};
   let initial_state = {random: Random.float(0.1) |> string_of_float};
-  let route_handler: Httpkit.Server.Common.route_handler(option(string)) =
+  let route_handler: Httpkit.Server.Common.route_handler(state) =
     (ctx, path) =>
       switch (path) {
-      /* | [""] => `OK("hello world #" ++ ctx.state.random) */
-      | [""] =>
-        switch (ctx.state) {
-        | Some(body) => `OK("hello world with body " ++ body)
-        | None => `OK("hello world with no body")
-        }
+      | [""] => `OK("hello world #" ++ ctx.state.random)
       | ["err"] => `With_status((`Unauthorized, "Yikes! Login first."))
       | ["with", "code", code] =>
         `With_status((code |> Httpaf.Status.of_string, ""))
@@ -30,7 +25,6 @@ Httpkit.(
   Server.(
     make(App.initial_state)
     |> use(Common.log)
-    |> use(Common.body_parser)
     |> reply(Common.router(App.route_handler))
     |> Httpkit_lwt.Server.Http.listen(~port=9999, ~on_start=App.on_start)
     |> Lwt_main.run

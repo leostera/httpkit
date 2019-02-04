@@ -53,8 +53,6 @@ module Common: {
   let router:
     route_handler('a) =>
     Middleware.t('a, [ | `Replied(Httpaf.Status.t, headers, string)]);
-
-  let body_parser: Middleware.t('a, option(string));
 };
 
 type status = [ | `Clean | `Listening | `With_middleware];

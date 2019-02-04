@@ -11,15 +11,6 @@ let log: Middleware.t('a, 'a) =
     ctx.state;
   };
 
-/** TODO: properly parse the body string as JSON
-  * - as Yojson
-  * - accepting a decoder function
-  */
-let body_parser: Middleware.t('a, option(string)) =
-  ctx => {
-    ctx.body();
-  };
-
 type headers = list((string, string));
 type path = list(string);
 

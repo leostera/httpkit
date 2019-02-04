@@ -63,36 +63,12 @@ let request_handler:
         Httpkit_lwt.Server.Request.read_body(reqd)
         >|= (
           body_string => {
-            let ctx = {
-              closer,
-              req,
-              respond,
-              body: () => body_string,
-              state: App.initial_state,
-            };
+            let body = () => body_string;
+            let ctx = {closer, req, respond, body, state: App.initial_state};
             /* manually run middlewares */
             Common.log(ctx)
-            |> (
-              state =>
-                App.inc({
-                  closer,
-                  req,
-                  respond,
-                  body: () => body_string,
-                  state,
-                })
-            )
-            |> (
-              state =>
-                App.json({
-                  closer,
-                  req,
-                  respond,
-                  body: () => body_string,
-                  state,
-                })
-            )
-            |> ignore;
+            |> (state => App.inc({closer, req, respond, body, state}))
+            |> (state => App.json({closer, req, respond, body, state}));
           }
         )
         |> ignore
@@ -110,9 +86,7 @@ let error_handler:
   unit =
   (_client, ~request as _=?, _err, _get) => ();
 
-/*
- Httpkit_lwt.Server.(
-   Http.start(~port=9999, ~on_start, ~request_handler, ~error_handler)
- )
- |> Lwt_main.run;
- */
+Httpkit_lwt.Server.(
+  Http.start(~port=9999, ~on_start, ~request_handler, ~error_handler)
+)
+|> Lwt_main.run;

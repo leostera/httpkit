@@ -1,5 +1,8 @@
 # Contributing
 
+`httpkit` builds with `esy`. If you don't have it, have a read
+[here](https://esy.sh).
+
 Hopefully you'll find that `httpkit` is well organized enough for you to jump on
 without much handholding.
 

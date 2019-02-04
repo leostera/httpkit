@@ -20,6 +20,7 @@ because working directly with
    4. [Servers should be fast to run](#servers-should-be-fast-to-run)
 2. [Principles: Client-side](#principles-client-side)
 2. [Benchmarks](https://github.com/ostera/httpkit/tree/master/bench)
+2. [Contributing](/CONTRIBUTING.md)
 
 ## Getting Started
 

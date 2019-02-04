@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "@esy-ocaml/reason": "3.4.0",
+    "@opam/dune": "*",
+    "@opam/fpath": "*",
+    "@opam/fmt": "*",
+    "@opam/httpaf": "*",
+    "@opam/httpaf-lwt": "*",
+    "@opam/logs": "*",
+    "@opam/merlin": "*",
+    "@opam/odoc": "*",
+    "@opam/tls": "*",
+    "@opam/uri": "*",
+    "@opam/yojson": "*",
+    "ocaml": "~4.7.0",
+    "refmterr": "*"
+  },
+  "resolutions": {
+    "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#57e9dd2",
+    "@opam/httpaf-lwt": "anmonteiro/httpaf:httpaf-lwt.opam#57e9dd2"
+  }
+}

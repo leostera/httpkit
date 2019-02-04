@@ -2,12 +2,7 @@ open Lwt.Infix;
 open Httpkit_server;
 
 type request_handler =
-  (
-    ~closer: unit => unit,
-    Unix.sockaddr,
-    Httpaf.Reqd.t(Lwt_unix.file_descr)
-  ) =>
-  Lwt.t(unit);
+  (~closer: unit => unit, Unix.sockaddr) => Httpaf_lwt.Server.request_handler;
 
 type error_handler =
   (
@@ -65,7 +60,8 @@ let make_request_handler: Server.t('s, 'r, 'a, 'b) => request_handler =
         |> Server.Middleware.run(closer, respond, req, body_string)
         |> ignore;
       }
-    );
+    )
+    |> ignore;
   };
 
 let error_handler: error_handler =
@@ -87,9 +83,7 @@ let start:
 
     let connection_handler =
       Httpaf_lwt.Server.create_connection_handler(
-        ~request_handler=
-          (client, reqd) =>
-            Lwt.async(() => request_handler(~closer, client, reqd)),
+        ~request_handler=request_handler(~closer),
         ~error_handler,
       );
 

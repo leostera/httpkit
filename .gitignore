@@ -5,3 +5,4 @@ _public
 /lua
 /lua_modules
 *.install
+node_modules

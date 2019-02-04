@@ -28,4 +28,4 @@
   (modules RawEchoServer)
   (public_name rawechottp)
 	(ocamlopt_flags -O3)
-  (libraries httpkit httpaf httpaf-lwt logs.fmt fmt.tty lwt))
+  (libraries httpkit httpkit-lwt httpaf httpaf-lwt logs.fmt fmt.tty lwt))

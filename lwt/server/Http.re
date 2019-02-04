@@ -1,3 +1,4 @@
+open Lwt.Infix;
 open Httpkit_server;
 
 type request_handler =
@@ -14,7 +15,7 @@ type error_handler =
 
 let make_request_handler: Server.t('s, 'r, 'a, 'b) => request_handler =
   (server, ~closer, _client, reqd) => {
-    let req = Httpaf.Reqd.request(reqd);
+    let req = reqd |> Httpaf.Reqd.request;
     let respond = (~status, ~headers=?, content) => {
       let headers =
         (
@@ -28,9 +29,15 @@ let make_request_handler: Server.t('s, 'r, 'a, 'b) => request_handler =
       let res = Httpaf.Response.create(status, ~headers);
       Httpaf.Reqd.respond_with_string(reqd, res, content);
     };
-    server
-    |> Server.middleware
-    |> Server.Middleware.run(closer, respond, req)
+    Request.read_body(reqd)
+    >|= (
+      body_string => {
+        server
+        |> Server.middleware
+        |> Server.Middleware.run(closer, respond, req, () => body_string)
+        |> ignore;
+      }
+    )
     |> ignore;
   };
 
@@ -46,8 +53,6 @@ let start:
   ) =>
   Lwt.t(unit) =
   (~port, ~on_start, ~request_handler, ~error_handler) => {
-    open Lwt.Infix;
-
     let (forever, awaker) = Lwt.wait();
     let closer = () => Lwt.wakeup_later(awaker, ());
 

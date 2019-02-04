@@ -58,13 +58,46 @@ let request_handler:
       let res = Httpaf.Response.create(status, ~headers);
       Httpaf.Reqd.respond_with_string(reqd, res, content);
     };
-    open Httpkit.Server.Middleware;
-    let ctx = {closer, req, respond, state: App.initial_state};
-    /* manually run middlewares */
-    Common.log(ctx)
-    |> (state => App.inc({closer, req, respond, state}))
-    |> (state => App.json({closer, req, respond, state}))
-    |> ignore;
+    Httpkit.Server.Middleware.(
+      Lwt.Infix.(
+        Httpkit_lwt.Server.Request.read_body(reqd)
+        >|= (
+          body_string => {
+            let ctx = {
+              closer,
+              req,
+              respond,
+              body: () => body_string,
+              state: App.initial_state,
+            };
+            /* manually run middlewares */
+            Common.log(ctx)
+            |> (
+              state =>
+                App.inc({
+                  closer,
+                  req,
+                  respond,
+                  body: () => body_string,
+                  state,
+                })
+            )
+            |> (
+              state =>
+                App.json({
+                  closer,
+                  req,
+                  respond,
+                  body: () => body_string,
+                  state,
+                })
+            )
+            |> ignore;
+          }
+        )
+        |> ignore
+      )
+    );
   };
 
 let error_handler:

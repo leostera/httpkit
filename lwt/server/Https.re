@@ -16,29 +16,6 @@ type error_handler =
 let make_request_handler: Server.t('s, 'r, 'a, 'b) => request_handler =
   (server, ~closer, _client, reqd) => {
     let req = reqd |> Httpaf.Reqd.request;
-    let read_body = () => {
-      switch (req.meth) {
-      | `POST
-      | `PUT =>
-        let (next, awake) = Lwt.wait();
-
-        Lwt.async(() => {
-          let body = reqd |> Httpaf.Reqd.request_body;
-          let body_str = ref("");
-          let on_eof = () => Lwt.wakeup_later(awake, Some(body_str^));
-          let rec on_read = (request_data, ~off, ~len) => {
-            let read = Httpaf.Bigstring.to_string(~off, ~len, request_data);
-            body_str := body_str^ ++ read;
-            Httpaf.Body.schedule_read(body, ~on_read, ~on_eof);
-          };
-          Httpaf.Body.schedule_read(body, ~on_read, ~on_eof);
-          Lwt.return_unit;
-        });
-
-        next;
-      | _ => Lwt.return_none
-      };
-    };
     let respond = (~status, ~headers=?, content) => {
       let headers =
         (
@@ -52,12 +29,12 @@ let make_request_handler: Server.t('s, 'r, 'a, 'b) => request_handler =
       let res = Httpaf.Response.create(status, ~headers);
       Httpaf.Reqd.respond_with_string(reqd, res, content);
     };
-    read_body()
+    Request.read_body(reqd)
     >|= (
       body_string => {
         server
         |> Server.middleware
-        |> Server.Middleware.run(closer, respond, req, body_string)
+        |> Server.Middleware.run(closer, respond, req, () => body_string)
         |> ignore;
       }
     )

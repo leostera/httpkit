@@ -63,13 +63,13 @@ let request_handler:
       closer,
       req,
       respond,
-      body_string: None,
+      body: () => None,
       state: App.initial_state,
     };
     /* manually run middlewares */
     Common.log(ctx)
-    |> (state => App.inc({closer, req, respond, body_string: None, state}))
-    |> (state => App.json({closer, req, respond, body_string: None, state}))
+    |> (state => App.inc({closer, req, respond, body: () => None, state}))
+    |> (state => App.json({closer, req, respond, body: () => None, state}))
     |> ignore;
   };
 

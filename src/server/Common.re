@@ -17,7 +17,7 @@ let log: Middleware.t('a, 'a) =
   */
 let body_parser: Middleware.t('a, option(string)) =
   ctx => {
-    ctx.body_string;
+    ctx.body();
   };
 
 type headers = list((string, string));

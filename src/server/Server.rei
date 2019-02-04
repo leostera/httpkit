@@ -8,7 +8,7 @@ module Middleware: {
       ) =>
       unit,
     req: Httpaf.Request.t,
-    body_string: option(string),
+    body: unit => option(string),
     closer: unit => unit,
     state: 'a,
   };
@@ -29,7 +29,7 @@ module Middleware: {
       ) =>
       unit,
       Httpaf.Request.t,
-      option(string),
+      unit => option(string),
       stack('i, 'o)
     ) =>
     'o;

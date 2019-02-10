@@ -109,7 +109,7 @@ You can install by dropping the following dependencies in your `package.json`:
 
 ```
 
-> NOTE: Make sure you're using the latest commit hash!
+> NOTE: For `httpkit` make sure you're using the latest commit hash!
 
 
 ## Common Middleware

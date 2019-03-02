@@ -28,8 +28,9 @@ because working directly with
 
 `httpkit` can be used both to build servers and to make requests as a client.
 
-Documentation is still a work-in-progress, but there's examples in the `tools`
-section that can give you a better idea of how to use the libraries. In short:
+Documentation is still a work-in-progress, but there's examples in the
+`examples` section that can give you a better idea of how to use the libraries.
+In short:
 
 For making a request:
 
@@ -111,6 +112,17 @@ You can install by dropping the following dependencies in your `package.json`:
 
 > NOTE: For `httpkit` make sure you're using the latest commit hash!
 
+## Running the Examples
+
+All of the examples are runnable as binaries after compilation, so you can
+either run `esy build` and find them within
+`./_esy/default/build/default/examples/*.exe` or you can ask dune to run them
+for you:
+
+```sh
+ostera/httpkit λ esy dune exec ./examples/Request.exe
+```
+
 
 ## Common Middleware
 
@@ -125,7 +137,7 @@ Drop the logger anywhere in your middleware chain to log a request with method,
 path, and timestamp as an _info_.
 
 ```sh
-ostera/httpkit λ ./_build/default/tools/HelloWorld.exe
+ostera/httpkit λ esy dune exec ./examples/HelloWorld.exe
 Running on localhost:9999
 HelloWorld.exe: [INFO] 15:56:43 — GET /with/code/401
 HelloWorld.exe: [INFO] 15:56:44 — GET /with/code/402
@@ -356,7 +368,7 @@ is taking too long, then *that's a bug*.
 Of course it'll take time to define what the maximum overhead should be (and how
 it should scale given you throw more middleware at it), but as an experiment it's doing quite well.
 
-Let's see an echo server (which you can see in the `tools` directory of this
+Let's see an echo server (which you can see in the `examples` directory of this
 repo). First the raw version that does not use anything but some types from
 `httpkit`:
 

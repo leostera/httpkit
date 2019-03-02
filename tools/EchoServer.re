@@ -24,7 +24,6 @@ module App = {
     };
 };
 
-/* TODO(@ostera):  why aren't we running this? */
 let on_start = () => Logs.app(m => m("Running on localhost:9999"));
 
 Httpkit.Server.(
@@ -32,7 +31,11 @@ Httpkit.Server.(
   |> use(Httpkit.Server.Common.log)
   |> use(App.inc)
   |> reply(App.json)
-  |> Httpkit_lwt.Server.Http.listen(~port=9999, ~on_start)
+  |> Httpkit_lwt.Server.Http.listen(
+       ~address=`Of_string("hello"),
+       ~port=9999,
+       ~on_start,
+     )
   /*
    |> Httpkit_lwt.Https.listen(~port=9999, ~on_start, ~key, ~cert)
    */

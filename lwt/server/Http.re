@@ -46,17 +46,24 @@ let error_handler: error_handler =
 
 let start:
   (
+    ~address: [ | `Loopback | `Any | `Of_string(string)],
     ~port: int,
     ~on_start: unit => unit,
     ~request_handler: request_handler,
     ~error_handler: error_handler
   ) =>
   Lwt.t(unit) =
-  (~port, ~on_start, ~request_handler, ~error_handler) => {
+  (~address, ~port, ~on_start, ~request_handler, ~error_handler) => {
     let (forever, awaker) = Lwt.wait();
     let closer = () => Lwt.wakeup_later(awaker, ());
 
-    let listening_address = Unix.(ADDR_INET(inet_addr_loopback, port));
+    let address =
+      switch (address) {
+      | `Loopback => Unix.inet_addr_loopback
+      | `Any => Unix.inet_addr_any
+      | `Of_string(str) => Unix.inet_addr_of_string(str)
+      };
+    let listening_address = Unix.(ADDR_INET(address, port));
 
     let connection_handler =
       Httpaf_lwt.Server.create_connection_handler(
@@ -76,13 +83,15 @@ let start:
 
 let listen:
   (
+    ~address: [ | `Loopback | `Any | `Of_string(string)]=?,
     ~port: int,
     ~on_start: unit => unit,
     Httpkit_server.Server.t([ | `With_middleware], [ | `Responded], 'a, 'b)
   ) =>
   Lwt.t(unit) =
-  (~port, ~on_start, server) =>
+  (~address=`Any, ~port, ~on_start, server) =>
     start(
+      ~address,
       ~port,
       ~on_start,
       ~request_handler=make_request_handler(server),

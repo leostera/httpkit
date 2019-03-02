@@ -87,6 +87,12 @@ let error_handler:
   (_client, ~request as _=?, _err, _get) => ();
 
 Httpkit_lwt.Server.(
-  Http.start(~port=9999, ~on_start, ~request_handler, ~error_handler)
+  Http.start(
+    ~address=`Any,
+    ~port=9999,
+    ~on_start,
+    ~request_handler,
+    ~error_handler,
+  )
 )
 |> Lwt_main.run;

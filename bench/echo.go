@@ -1,17 +1,17 @@
 package main
 
 import (
+	"bytes"
 	"log"
 	"net/http"
-  "bytes"
 )
 
 const DefaultPort = "8080"
 
 func EchoHandler(writer http.ResponseWriter, request *http.Request) {
-  stamp := request.Method + " " + request.URL.Path
+	stamp := request.Method + " " + request.URL.Path
 	log.Println(stamp)
-  buf := bytes.NewBufferString(request.URL.Path)
+	buf := bytes.NewBufferString(request.URL.Path)
 	request.Write(buf)
 }
 

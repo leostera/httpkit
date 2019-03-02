@@ -33,8 +33,9 @@ let make_request_handler: Server.t('s, 'r, 'a, 'b) => request_handler =
     >|= (
       body_string => {
         server
-        |> Server.middleware
-        |> Server.Middleware.run(closer, respond, req, () => body_string)
+        |> Server.run(~closer, ~respond, ~request=req, ~body=() =>
+             body_string
+           )
         |> ignore;
       }
     )

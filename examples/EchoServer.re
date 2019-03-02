@@ -15,9 +15,9 @@ module App = {
     req_count: int,
     name: string,
   };
-  let inc: Server.Middleware.t(state, other) =
+  let inc: Server.middleware(state, other) =
     ctx => {req_count: ctx.state.req_count + 1, name: "what"};
-  let json: Server.Middleware.t(other, unit) =
+  let json: Server.middleware(other, unit) =
     ctx => {
       let str = ctx.state.req_count |> string_of_int;
       ctx.respond(~status=`OK, str);
@@ -28,7 +28,7 @@ let on_start = () => Logs.app(m => m("Running on localhost:9999"));
 
 Httpkit.Server.(
   make(App.initial_state)
-  |> use(Httpkit.Server.Common.log)
+  |> use(Httpkit.Middleware.Common.log)
   |> use(App.inc)
   |> reply(App.json)
   |> Httpkit_lwt.Server.Http.listen(

@@ -10,7 +10,7 @@ module App = {
   let on_start = () => Logs.app(m => m("Running on localhost:9999"));
   type state = {random: string};
   let initial_state = {random: Random.float(0.1) |> string_of_float};
-  let route_handler: Httpkit.Server.Common.route_handler(state) =
+  let route_handler: Httpkit.Middleware.Common.route_handler(state) =
     (ctx, path) =>
       switch (path) {
       | [""] => `OK("hello world #" ++ ctx.state.random)
@@ -21,6 +21,7 @@ module App = {
       };
 };
 
+module Common = Httpkit.Middleware.Common;
 Httpkit.(
   Server.(
     make(App.initial_state)

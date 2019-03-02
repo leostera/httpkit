@@ -1,4 +1,4 @@
-let log: Middleware.t('a, 'a) =
+let log: Model.middleware('a, 'a) =
   ctx => {
     let {Unix.tm_hour, tm_min, tm_sec, _} = Unix.time() |> Unix.localtime;
     let time = Printf.sprintf("%d:%d:%d", tm_hour, tm_min, tm_sec);
@@ -15,7 +15,7 @@ type headers = list((string, string));
 type path = list(string);
 
 type route_handler('a) =
-  (Middleware.ctx('a), path) =>
+  (Model.ctx('a), path) =>
   [
     | `OK(string)
     | `With_headers(Httpaf.Status.t, headers, string)
@@ -25,7 +25,7 @@ type route_handler('a) =
 
 let router:
   route_handler('a) =>
-  Middleware.t('a, [ | `Replied(Httpaf.Status.t, headers, string)]) =
+  Model.middleware('a, [ | `Replied(Httpaf.Status.t, headers, string)]) =
   (handler, ctx) => {
     let path = ctx.req.target |> String.split_on_char('/') |> List.tl;
     let (status, headers, response) =

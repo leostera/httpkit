@@ -9,7 +9,7 @@ Logs.set_reporter(Logs_fmt.reporter());
 open Httpkit;
 
 module Common = {
-  let log: Server.Middleware.ctx('a) => 'a =
+  let log: Server.middleware('a, 'a) =
     ctx => {
       let {Unix.tm_hour, tm_min, tm_sec, _} = Unix.time() |> Unix.localtime;
       let time = Printf.sprintf("%d:%d:%d", tm_hour, tm_min, tm_sec);
@@ -25,14 +25,18 @@ module Common = {
 
 module App = {
   type state = {req_count: int};
+
   let initial_state = {req_count: 0};
+
   type other = {
     req_count: int,
     name: string,
   };
-  let inc: Server.Middleware.t(state, other) =
+
+  let inc: Server.middleware(state, other) =
     ctx => {req_count: ctx.state.req_count + 1, name: "what"};
-  let json: Server.Middleware.t(other, unit) =
+
+  let json: Server.middleware(other, unit) =
     ctx => {
       let str = ctx.state.req_count |> string_of_int;
       ctx.respond(~status=`OK, str);
@@ -58,21 +62,25 @@ let request_handler:
       let res = Httpaf.Response.create(status, ~headers);
       Httpaf.Reqd.respond_with_string(reqd, res, content);
     };
-    Httpkit.Server.Middleware.(
-      Lwt.Infix.(
-        Httpkit_lwt.Server.Request.read_body(reqd)
-        >|= (
-          body_string => {
-            let body = () => body_string;
-            let ctx = {closer, req, respond, body, state: App.initial_state};
-            /* manually run middlewares */
-            Common.log(ctx)
-            |> (state => App.inc({closer, req, respond, body, state}))
-            |> (state => App.json({closer, req, respond, body, state}));
-          }
-        )
-        |> ignore
+    Lwt.Infix.(
+      Httpkit_lwt.Server.Request.read_body(reqd)
+      >|= (
+        body_string => {
+          let body = () => body_string;
+          let ctx: Httpkit.Middleware.Model.ctx(_) = {
+            closer,
+            req,
+            respond,
+            body,
+            state: App.initial_state,
+          };
+          /* manually run middlewares */
+          Common.log(ctx)
+          |> (state => App.inc({closer, req, respond, body, state}))
+          |> (state => App.json({closer, req, respond, body, state}));
+        }
       )
+      |> ignore
     );
   };
 

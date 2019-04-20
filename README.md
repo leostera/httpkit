@@ -35,6 +35,8 @@ In short:
 For making a request:
 
 ```reason
+open Lwt_result.Infix;
+
 let req =
   Httpkit.Client.Request.create(
     ~headers=[("User-Agent", "Reason HttpKit")],

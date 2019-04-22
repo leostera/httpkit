@@ -1,5 +1,0 @@
-(library
-  (name httpkit_lwt_client)
-  (public_name httpkit-lwt.client)
-  (libraries httpkit httpaf-lwt lwt lwt.unix tls tls.lwt uri logs logs.lwt fpath))
-

@@ -1,6 +1,0 @@
-(library
-  (name httpkit_server)
-  (public_name httpkit.server)
-  (libraries
-    httpkit.middleware
-    fmt logs httpaf uri))

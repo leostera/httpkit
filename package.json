@@ -2,8 +2,11 @@
   "dependencies": {
     "@esy-ocaml/reason": "3.4.0",
     "@opam/dune": "*",
-    "@opam/fpath": "*",
     "@opam/fmt": "*",
+    "@opam/fpath": "*",
+    "@opam/h2": "0.2.0",
+    "@opam/h2-lwt": "0.2.0",
+    "@opam/h2-lwt-unix": "0.2.0",
     "@opam/httpaf": "*",
     "@opam/httpaf-lwt": "*",
     "@opam/logs": "*",

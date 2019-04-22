@@ -1,4 +1,0 @@
-(library
-  (name httpkit_client)
-  (public_name httpkit.client)
-  (libraries fmt logs httpaf uri))

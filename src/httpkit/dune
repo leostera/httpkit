@@ -1,5 +1,0 @@
-(library
-  (name httpkit)
-  (public_name httpkit)
-  (libraries httpkit_server httpkit_client))
-

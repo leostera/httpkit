@@ -1,5 +1,7 @@
 # ⚡️HttpKit — High-level, High-performance HTTP(S) Clients/Servers in Reason/OCaml
 
+> NOTE: under heavy reconstruction. Latest stable version is `660d1c8`
+
 Hello! `httpkit` is not yet more than an experiment in API ergonomics backed by
 strong usage of the type-system, that in this case is aimed both at being
 delightful to use, impossible to misuse, and blazingly fast.

@@ -14,16 +14,20 @@ Logs.set_reporter(Logs_fmt.reporter());
 
 */
 
-let https_url = "https://api.npms.io/v2/package/bsdoc";
+let https_url = "https://api.github.com/repos/ostera/httpkit";
 Logs.app(m => m("Requesting: %s", https_url));
 switch (
   Httpkit.Client.Request.create(
-    ~headers=[("User-Agent", "Reason HttpKit")],
+    ~headers=[
+      ("User-Agent", "Reason HttpKit"),
+      ("Accept", "*/*"),
+      ("Host", "api.github.com"),
+    ],
     `GET,
     https_url |> Uri.of_string,
   )
-  |> Httpkit_lwt_unix_h2.Client.Https.send(~client=`No_authentication)
-  >>= Httpkit_lwt_unix_h2.Client.Response.body
+  |> Httpkit_lwt_unix_httpaf.Client.Https.send(~client=`No_authentication)
+  >>= Httpkit_lwt_unix_httpaf.Client.Response.body
   |> Lwt_main.run
 ) {
 | exception e => Logs.err(m => m("%s", Printexc.to_string(e)))

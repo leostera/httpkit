@@ -1,5 +1,12 @@
 open Lwt.Infix;
 
+Ssl_threads.init();
+Ssl.init();
+let default_ssl_context = Ssl.create_context(Ssl.SSLv23, Ssl.Client_context);
+Ssl.disable_protocols(default_ssl_context, [Ssl.SSLv23]);
+Ssl.set_context_alpn_protos(default_ssl_context, ["h2"]);
+Ssl.honor_cipher_order(default_ssl_context);
+
 let send:
   (~config: H2.Config.t=?, Httpkit.Request.t) =>
   Lwt_result.t(
@@ -35,45 +42,65 @@ let send:
     Lwt_unix.getaddrinfo(host, port, [Unix.(AI_FAMILY(PF_INET))])
     >>= (
       addresses => {
-        Logs.debug(m => m("Got address..."));
         let socket_addr = List.hd(addresses).Unix.ai_addr;
         let socket = Lwt_unix.socket(Unix.PF_INET, Unix.SOCK_STREAM, 0);
 
         Lwt_unix.connect(socket, socket_addr)
         >>= (
           () => {
-            Logs.debug(m => m("Opened socket..."));
-            let (response_received, notify_response_received) = Lwt.wait();
-            let response_handler = response_handler(notify_response_received);
-            let error_handler = error_handler(notify_response_received);
+            Lwt_ssl.ssl_connect(socket, default_ssl_context)
+            >>= (
+              ssl_client => {
+                let (response_received, notify_response_received) =
+                  Lwt.wait();
+                let response_handler =
+                  response_handler(notify_response_received);
+                let error_handler = error_handler(notify_response_received);
 
-            let write_body = request_body => {
-              Logs.debug(m => m("Writing body..."));
-              switch (Httpkit.Request.body(req)) {
-              | None => ()
-              | Some(str) => H2.Body.write_string(request_body, str)
-              };
-              H2.Body.close_writer(request_body);
-              response_received >>= (x => x);
-            };
+                let write_body = request_body => {
+                  switch (Httpkit.Request.body(req)) {
+                  | None => ()
+                  | Some(str) => H2.Body.write_string(request_body, str)
+                  };
+                  H2.Body.flush(
+                    request_body,
+                    () => {
+                      H2.Body.close_writer(request_body);
+                      Logs.debug(m => m("Closed body writer..."));
+                    },
+                  );
+                  response_received >>= (x => x);
+                };
 
-            let request = Client_request.of_httpkit_request(req);
+                let request = Client_request.of_httpkit_request(req);
 
-            let handle_tls_connection = connection =>
-              H2_lwt_unix.Client.TLS.request(
-                connection,
-                request,
-                ~error_handler,
-                ~response_handler,
-              )
-              |> write_body;
+                Logs.debug(m => {
+                  let buffer = Buffer.create(1024);
+                  let fmt = Format.formatter_of_buffer(buffer);
+                  H2.Request.pp_hum(fmt, request);
+                  m("%s", buffer |> Buffer.contents);
+                });
 
-            H2_lwt_unix.Client.TLS.create_connection(
-              ~config,
-              ~error_handler,
-              socket,
-            )
-            >>= handle_tls_connection;
+                let handle_ssl_connection = connection =>
+                  H2_lwt_unix.Client.SSL.request(
+                    connection,
+                    request,
+                    ~error_handler,
+                    ~response_handler,
+                  )
+                  |> write_body;
+
+                let connect = () =>
+                  H2_lwt_unix.Client.SSL.create_connection(
+                    ~client=ssl_client,
+                    ~config,
+                    ~error_handler,
+                    socket,
+                  );
+
+                connect() >>= handle_ssl_connection;
+              }
+            );
           }
         );
       }

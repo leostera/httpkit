@@ -54,6 +54,7 @@ let send:
               | Some(str) => H2.Body.write_string(request_body, str)
               };
               H2.Body.close_writer(request_body);
+              Logs.debug(m => m("Closed writer..."));
               response_received >>= (x => x);
             };
 

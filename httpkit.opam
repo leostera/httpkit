@@ -10,6 +10,8 @@ bug-reports: "https//github.com/ostera/httpkit/issues"
 depends: [
   "logs"
   "uri"
+  "httpaf"
+  "h2"
 
   "dune" {build}
   "reason" {build}

@@ -9,3 +9,16 @@ let of_httpkit_request = req => {
     req |> Request.path,
   );
 };
+
+let to_httpkit_request = (~body, ~uri, req) => {
+  Httpkit.Request.create(
+    ~headers=req.H2.Request.headers |> H2.Headers.to_list,
+    ~body=
+      switch (body) {
+      | None => ""
+      | Some(b) => b
+      },
+    req.meth,
+    uri,
+  );
+};

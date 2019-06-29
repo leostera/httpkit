@@ -1,0 +1,18 @@
+let read_body = reqd => {
+  let (next, awake) = Lwt.wait();
+
+  Lwt.async(() => {
+    let body = reqd |> H2.Reqd.request_body;
+    let body_str = ref("");
+    let on_eof = () => Lwt.wakeup_later(awake, Some(body_str^));
+    let rec on_read = (request_data, ~off, ~len) => {
+      let read = Bigstringaf.substring(~off, ~len, request_data);
+      body_str := body_str^ ++ read;
+      H2.Body.schedule_read(body, ~on_read, ~on_eof);
+    };
+    H2.Body.schedule_read(body, ~on_read, ~on_eof);
+    Lwt.return_unit;
+  });
+
+  next;
+};

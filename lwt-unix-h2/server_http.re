@@ -7,9 +7,9 @@ let make_request_handler:
     ~closer: unit => unit,
     Unix.sockaddr
   ) =>
-  Httpaf.Server_connection.request_handler =
+  H2.Server_connection.request_handler =
   (~uri, ~handler, ~closer, _client, reqd) => {
-    let req = reqd |> Httpaf.Reqd.request;
+    let req = reqd |> H2.Reqd.request;
     Logs.debug(m => m("Handling request..."));
     let respond = (~headers=?, status, content) => {
       let headers =
@@ -20,10 +20,10 @@ let make_request_handler:
           }
         )
         @ [("content-length", content |> String.length |> string_of_int)]
-        |> Httpaf.Headers.of_list;
+        |> H2.Headers.of_list;
       let res =
-        Httpaf.Response.create(status |> Httpaf.Status.of_code, ~headers);
-      Httpaf.Reqd.respond_with_string(reqd, res, content);
+        H2.Response.create(status |> H2.Status.of_code, ~headers);
+      H2.Reqd.respond_with_string(reqd, res, content);
     };
     Server_request.read_body(reqd)
     >|= (
@@ -81,8 +81,8 @@ let listen:
     let listening_address = Unix.(ADDR_INET(address, port));
 
     let connection_handler =
-      Httpaf_lwt_unix.Server.create_connection_handler(
-        ~config=Httpaf.Config.default,
+      H2_lwt_unix.Server.create_connection_handler(
+        ~config=H2.Config.default,
         ~request_handler=make_request_handler(~uri, ~handler, ~closer),
         ~error_handler,
       );

@@ -8,17 +8,19 @@ Logs.set_reporter(Logs_fmt.reporter());
 
 module Httpkit = Httpkit_lwt_unix_h2;
 
-let on_start = () => Logs.app(m => m("Running on localhost:8080"));
+let port = 8080;
 
-let handler = (req, res) => {
-  Logs.app(m =>
-    m(
-      "%s %s",
-      req |> Httpkit.Client.Request.meth,
-      req |> Httpkit.Client.Request.path,
-    )
-  );
-};
+let on_start = (~hoststring) =>
+  Logs.app(m => m("Running on %s", hoststring));
 
-Httpkit.Server.listen(~port=8080, ~host="0.0.0.0", ~handler, ~on_start)
+let handler: Httpkit.Server.handler =
+  (req, reply, close) => {
+    let method = req |> Httpkit.Request.meth |> H2.Method.to_string;
+    let path = req |> Httpkit.Request.path;
+    Logs.app(m => m("%s %s", method, path));
+    reply(200, "hi");
+    close();
+  };
+
+Httpkit.Server.Http.listen(~port, ~address=`Any, ~handler, ~on_start)
 |> Lwt_main.run;

@@ -1,5 +1,5 @@
 let of_httpkit_request = req => {
-  open Httpkit.Client;
+  open Httpkit;
   let host = req |> Request.host;
   let headers = [(":authority", host)] @ (req |> Request.headers);
   H2.Request.create(

@@ -13,3 +13,11 @@
   (modules request_http2)
 	(ocamlopt_flags -O3)
   (libraries httpkit-lwt-unix-h2 httpkit logs.fmt fmt.tty fpath))
+
+(executable
+  (package httpkit)
+  (name echo_server_http)
+  (public_name echo_server_http)
+  (modules echo_server_http)
+	(ocamlopt_flags -O3)
+  (libraries httpkit-lwt-unix-httpaf httpkit logs.fmt fmt.tty fpath))

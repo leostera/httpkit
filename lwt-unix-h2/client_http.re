@@ -1,14 +1,13 @@
 open Lwt.Infix;
-open Httpkit.Client;
 
 let send:
-  (~config: H2.Config.t=?, Httpkit.Client.Request.t) =>
+  (~config: H2.Config.t=?, Httpkit.Request.t) =>
   Lwt_result.t(
     (H2.Response.t, H2.Body.t([ | `read])),
     [> | `Connection_error(H2.Client_connection.error)],
   ) =
   (~config=H2.Config.default, req) => {
-    let uri = Request.uri(req);
+    let uri = Httpkit.Request.uri(req);
 
     let response_handler = (notify_response_received, response, response_body) => {
       Logs.debug(m => m("Handling response..."));
@@ -50,7 +49,7 @@ let send:
 
             let write_body = request_body => {
               Logs.debug(m => m("Writing body..."));
-              switch (Request.body(req)) {
+              switch (Httpkit.Request.body(req)) {
               | None => ()
               | Some(str) => H2.Body.write_string(request_body, str)
               };

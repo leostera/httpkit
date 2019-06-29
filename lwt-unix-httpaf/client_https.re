@@ -1,5 +1,4 @@
 open Lwt.Infix;
-open Httpkit.Client;
 
 type client_security = [
   | `No_authentication
@@ -11,14 +10,14 @@ let send:
   (
     ~config: Httpaf.Config.t=?,
     ~client: client_security=?,
-    Httpkit.Client.Request.t
+    Httpkit.Request.t
   ) =>
   Lwt_result.t(
     (Httpaf.Response.t, Httpaf.Body.t([ | `read])),
     [> | `Connection_error(Httpaf.Client_connection.error)],
   ) =
   (~config=Httpaf.Config.default, ~client as _=`No_authentication, req) => {
-    let uri = Request.uri(req);
+    let uri = Httpkit.Request.uri(req);
 
     let response_handler = (notify_response_received, response, response_body) => {
       Logs.debug(m => m("Handling response..."));
@@ -60,7 +59,7 @@ let send:
 
             let write_body = request_body => {
               Logs.debug(m => m("Writing body..."));
-              switch (Request.body(req)) {
+              switch (Httpkit.Request.body(req)) {
               | None => ()
               | Some(str) => Httpaf.Body.write_string(request_body, str)
               };

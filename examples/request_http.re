@@ -17,7 +17,7 @@ module Httpkit = Httpkit_lwt_unix_httpaf;
 let https_url = Sys.argv[1];
 Logs.app(m => m("Requesting: %s", https_url));
 switch (
-  Httpkit.Client.Request.create(
+  Httpkit.Request.create(
     ~headers=[
       ("User-Agent", "Reason HttpKit"),
       ("Accept", "*/*"),

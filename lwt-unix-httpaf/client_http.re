@@ -1,14 +1,13 @@
 open Lwt.Infix;
-open Httpkit.Client;
 
 let send:
-  (~config: Httpaf.Config.t=?, Httpkit.Client.Request.t) =>
+  (~config: Httpaf.Config.t=?, Httpkit.Request.t) =>
   Lwt_result.t(
     (Httpaf.Response.t, Httpaf.Body.t([ | `read])),
     [> | `Connection_error(Httpaf.Client_connection.error)],
   ) =
   (~config=Httpaf.Config.default, req) => {
-    let uri = Request.uri(req);
+    let uri = Httpkit.Request.uri(req);
 
     let response_handler = (notify_response_received, response, response_body) => {
       Logs.debug(m => m("Handling response..."));
@@ -48,7 +47,7 @@ let send:
             let error_handler = error_handler(notify_response_received);
 
             let write_body = request_body => {
-              switch (Request.body(req)) {
+              switch (Httpkit.Request.body(req)) {
               | None => ()
               | Some(str) => Httpaf.Body.write_string(request_body, str)
               };
@@ -60,7 +59,7 @@ let send:
             let request = Client_request.of_httpkit_request(req);
 
             Logs.debug(m =>
-              m("Sending request: \n\n%s", req |> Request.to_string)
+              m("Sending request: \n\n%s", req |> Httpkit.Request.to_string)
             );
             Httpaf_lwt_unix.Client.request(
               ~config,

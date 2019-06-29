@@ -1,4 +1,4 @@
-# ⚡️HttpKit — High-level, High-performance HTTP1.1/2 Clients/Servers in Reason
+# ⚡️HttpKit — high-level, high-performance HTTP1.1/2 clients/servers in Reason
 
 > NOTE: under heavy reconstruction. Latest stable version was [`660d1c8`](https://github.com/ostera/httpkit/tree/660d1c8b7438d207be2717495d8590a529bf5a1f)
 
@@ -8,8 +8,18 @@ HTTP, HTTPS, and HTTP2.
 It serves as a thin layer over `h2` and `http/af`, and when it can it allows you
 to seamlessly transition from one to the other.
 
+0. [Roadmap](#roadmap)
 1. [Getting Started](#getting-started)
 1. [Running the Examples](#running-the-examples)
+
+## Roadmap
+
+| Feature          | HTTP/1.1 | HTTPS/1.1 | HTTP/2 | HTTPS/2 |
+|------------------|----------|-----------|--------|---------|
+| Listen as Server | Yes      | No        | Yes    | No      |
+| Send Request     | Yes      | Yes       | No     | No      |
+| Server Push      | -        | -         | No     | No      |
+|                  |          |           |        |         |
 
 ## Getting Started
 

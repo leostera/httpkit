@@ -33,32 +33,35 @@ let send:
       | Some(number) => string_of_int(number)
       };
 
+    Logs.debug(m => m("Getting address for %s:%s", host, port));
     Lwt_unix.getaddrinfo(host, port, [Unix.(AI_FAMILY(PF_INET))])
     >>= (
       addresses => {
-        Logs.debug(m => m("Got address..."));
         let socket_addr = List.hd(addresses).Unix.ai_addr;
         let socket = Lwt_unix.socket(Unix.PF_INET, Unix.SOCK_STREAM, 0);
+        Logs.debug(m => m("Opening socket to %s:%s", host, port));
         Lwt_unix.connect(socket, socket_addr)
         >>= (
           () => {
-            Logs.debug(m => m("Opened socket..."));
             let (response_received, notify_response_received) = Lwt.wait();
             let response_handler = response_handler(notify_response_received);
             let error_handler = error_handler(notify_response_received);
 
             let write_body = request_body => {
-              Logs.debug(m => m("Writing body..."));
               switch (Request.body(req)) {
               | None => ()
               | Some(str) => Httpaf.Body.write_string(request_body, str)
               };
               Httpaf.Body.close_writer(request_body);
+              Logs.debug(m => m("Request sent. Awaiting for response..."));
               response_received >>= (x => x);
             };
 
             let request = Client_request.of_httpkit_request(req);
 
+            Logs.debug(m =>
+              m("Sending request: \n\n%s", req |> Request.to_string)
+            );
             Httpaf_lwt_unix.Client.request(
               ~config,
               ~error_handler,

@@ -1,8 +1,9 @@
 let body:
-  ((Httpaf.Response.t, Httpaf.Body.t([ | `read]))) => Lwt.t(result(string, 'b)) =
+  ((Httpaf.Response.t, Httpaf.Body.t([ | `read]))) => Lwt_result.t(string, 'b) =
   ((_response, body)) => {
     open Lwt.Infix;
-    let buffer = Buffer.create(1024);
+    let buffer = Buffer.create(2048);
+    Logs.debug(m => m("Prepared buffer for response body..."));
     let (next, wakeup) = Lwt.wait();
     Lwt.async(() => {
       let rec read_response = () =>

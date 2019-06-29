@@ -21,14 +21,11 @@ switch (
     ~headers=[
       ("User-Agent", "Reason HttpKit"),
       ("Accept", "*/*"),
-      ("Pragma", "no-cache"),
-      ("accept-language", "en-GB,en-US;q=0.9,en;q=0.8,sv;q=0.7"),
-      ("accept-encoding", "gzip, deflate, br"),
     ],
     `GET,
     https_url |> Uri.of_string,
   )
-  |> Httpkit.Client.Https.send(~client=`No_authentication)
+  |> Httpkit.Client.Https.send
   >>= Httpkit.Client.Response.body
   |> Lwt_main.run
 ) {

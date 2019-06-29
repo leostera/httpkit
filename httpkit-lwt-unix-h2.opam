@@ -1,6 +1,6 @@
 opam-version: "2.0"
-name: "httpkit-lwt"
-version: "0.12"
+name: "httpkit-lwt-unix-h2"
+version: "0.13"
 synopsis: "High-level, High-performance HTTP(S) Clients/Servers with Lwt"
 maintainer: "Leandro Ostera <leandro@ostera.io>"
 authors: "Leandro Ostera <leandro@ostera.io>"
@@ -9,8 +9,13 @@ homepage: "https//github.com/ostera/httpkit"
 bug-reports: "https//github.com/ostera/httpkit/issues"
 depends: [
   "httpkit"
-  "httpaf-lwt"
+  "h2"
+  "h2-lwt"
+  "h2-lwt-unix"
   "lwt"
+  "lwt_ssl"
+  "ssl"
+  "tls"
 
   "dune" {build}
   "reason" {build}

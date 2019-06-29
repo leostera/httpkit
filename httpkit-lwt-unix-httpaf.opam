@@ -1,6 +1,6 @@
 opam-version: "2.0"
-name: "httpkit-lwt"
-version: "0.12"
+name: "httpkit-lwt-unix-httpaf"
+version: "0.13"
 synopsis: "High-level, High-performance HTTP(S) Clients/Servers with Lwt"
 maintainer: "Leandro Ostera <leandro@ostera.io>"
 authors: "Leandro Ostera <leandro@ostera.io>"
@@ -11,6 +11,7 @@ depends: [
   "httpkit"
   "httpaf-lwt"
   "lwt"
+  "ssl"
 
   "dune" {build}
   "reason" {build}

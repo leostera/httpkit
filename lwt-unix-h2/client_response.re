@@ -3,6 +3,7 @@ let body:
   ((_response, body)) => {
     open Lwt.Infix;
     let buffer = Buffer.create(1024);
+    Logs.debug(m => m("Buffering response..."));
     let (next, wakeup) = Lwt.wait();
     Lwt.async(() => {
       let rec read_response = () =>

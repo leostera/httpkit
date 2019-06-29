@@ -60,21 +60,22 @@ let send:
 
             let request = Client_request.of_httpkit_request(req);
 
-            let handle_tls_connection = connection =>
-              H2_lwt_unix.Client.TLS.request(
-                connection,
-                request,
-                ~error_handler,
-                ~response_handler,
-              )
-              |> write_body;
-
-            H2_lwt_unix.Client.TLS.create_connection(
+            H2_lwt_unix.Client.create_connection(
               ~config,
               ~error_handler,
               socket,
             )
-            >>= handle_tls_connection;
+            >>= (
+              connection => {
+                H2_lwt_unix.Client.request(
+                  connection,
+                  request,
+                  ~error_handler,
+                  ~response_handler,
+                )
+                |> write_body;
+              }
+            );
           }
         );
       }

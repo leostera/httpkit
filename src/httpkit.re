@@ -11,6 +11,11 @@ module Request = {
   };
 
   let body = t => t.body;
+  let content_length = t =>
+    switch (t.body) {
+    | None => 0
+    | Some(body) => String.length(body)
+    };
   let meth = t => t.meth;
   let uri = t => t.uri;
   let path = t => t.uri |> Uri.path_and_query;
@@ -26,7 +31,8 @@ module Request = {
     let host = Uri.host_with_default(uri);
     let content_length = body |> String.length |> string_of_int;
     let headers =
-      [("Host", host), ("Content-Length", content_length)] @ headers;
+      [("host", host), ("content-length", content_length)]
+      @ (headers |> List.map(((k, v)) => (k |> String.lowercase_ascii, v)));
     let body =
       switch (body) {
       | "" => None

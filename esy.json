@@ -9,6 +9,7 @@
     "@opam/h2-lwt-unix": "0.2.0",
     "@opam/httpaf": "*",
     "@opam/logs": "*",
+    "@opam/lwt": "4.2.1",
     "@opam/lwt_ssl": "1.1.2",
     "@opam/merlin": "*",
     "@opam/odoc": "*",
@@ -19,7 +20,7 @@
     "refmterr": "*"
   },
   "resolutions": {
-        "@opam/conf-libev": "esy-packages/libev:package.json#86d244e",
+    "@opam/conf-libev": "esy-packages/libev:package.json#86d244e",
     "@opam/conf-autoconf": "esy-packages/esy-autoconf:package.json#71a8836",
     "@opam/conf-openssl": {
       "source": "no-source:",
@@ -31,7 +32,8 @@
         }
       }
     },
-    "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#6d2c80e3a16ecf85d74df76005ab68136457e111",
+    "@opam/httpaf":
+      "anmonteiro/httpaf:httpaf.opam#6d2c80e3a16ecf85d74df76005ab68136457e111",
     "@opam/ssl": "anmonteiro/ocaml-ssl:ssl.opam#b965d15"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "checksum": "40d28fff1ded0641c6b959a47db33243",
+  "checksum": "80dc0366d5a960e92d12cd72a9f64a92",
   "root": "httpkit@link-dev:./esy.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0@d41d8cd9": {
@@ -60,7 +60,7 @@
         "@opam/yojson@opam:1.7.0@2d92307e", "@opam/uri@opam:2.2.1@6bd26f86",
         "@opam/tls@opam:0.10.2@76ef72ee", "@opam/odoc@opam:1.4.1@1423b616",
         "@opam/merlin@opam:3.3.1@43415979",
-        "@opam/lwt_ssl@opam:1.1.2@ac833920",
+        "@opam/lwt_ssl@opam:1.1.2@ac833920", "@opam/lwt@opam:4.2.1@c1888ec9",
         "@opam/logs@opam:0.6.3@80c08d15",
         "@opam/httpaf@github:anmonteiro/httpaf:httpaf.opam#6d2c80e3a16ecf85d74df76005ab68136457e111@d41d8cd9",
         "@opam/h2-lwt-unix@opam:0.2.0@8e22b825",

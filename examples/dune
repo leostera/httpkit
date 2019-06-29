@@ -2,22 +2,22 @@
   (name request_http)
   (modules request_http)
 	(ocamlopt_flags -O3)
-  (libraries httpkit-lwt-unix-httpaf httpkit logs.fmt fmt.tty fpath))
+  (libraries httpkit-lwt-unix-httpaf httpkit logs.fmt fmt.tty))
 
 (executable
   (name request_http2)
   (modules request_http2)
 	(ocamlopt_flags -O3)
-  (libraries httpkit-lwt-unix-h2 httpkit logs.fmt fmt.tty fpath))
+  (libraries httpkit-lwt-unix-h2 httpkit logs.fmt fmt.tty))
 
 (executable
   (name echo_server_http)
   (modules echo_server_http)
 	(ocamlopt_flags -O3)
-  (libraries httpkit-lwt-unix-httpaf httpkit logs.fmt fmt.tty fpath))
+  (libraries httpkit-lwt-unix-httpaf httpkit logs.fmt fmt.tty))
 
 (executable
   (name echo_server_http2)
   (modules echo_server_http2)
 	(ocamlopt_flags -O3)
-  (libraries httpkit-lwt-unix-h2 httpkit logs.fmt fmt.tty fpath))
+  (libraries httpkit-lwt-unix-h2 httpkit logs.fmt fmt.tty))

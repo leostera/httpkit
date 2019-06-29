@@ -1,5 +1,5 @@
 {
-  "checksum": "80dc0366d5a960e92d12cd72a9f64a92",
+  "checksum": "a0e2893c6358e57f4465016fb2d59c21",
   "root": "httpkit@link-dev:./esy.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0@d41d8cd9": {
@@ -65,8 +65,8 @@
         "@opam/httpaf@github:anmonteiro/httpaf:httpaf.opam#6d2c80e3a16ecf85d74df76005ab68136457e111@d41d8cd9",
         "@opam/h2-lwt-unix@opam:0.2.0@8e22b825",
         "@opam/h2-lwt@opam:0.2.0@a6f9bd91", "@opam/h2@opam:0.2.0@62642b87",
-        "@opam/fpath@opam:0.7.2@45477b93", "@opam/fmt@opam:0.8.6@a06c130d",
-        "@opam/dune@opam:1.10.0@b15ce221", "@esy-ocaml/reason@3.4.0@d41d8cd9"
+        "@opam/fmt@opam:0.8.6@a06c130d", "@opam/dune@opam:1.10.0@b15ce221",
+        "@esy-ocaml/reason@3.4.0@d41d8cd9"
       ],
       "devDependencies": []
     },

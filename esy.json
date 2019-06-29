@@ -3,7 +3,6 @@
     "@esy-ocaml/reason": "3.4.0",
     "@opam/dune": "*",
     "@opam/fmt": "*",
-    "@opam/fpath": "*",
     "@opam/h2": "0.2.0",
     "@opam/h2-lwt": "0.2.0",
     "@opam/h2-lwt-unix": "0.2.0",
@@ -32,8 +31,7 @@
         }
       }
     },
-    "@opam/httpaf":
-      "anmonteiro/httpaf:httpaf.opam#6d2c80e3a16ecf85d74df76005ab68136457e111",
+    "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#6d2c80e3a16ecf85d74df76005ab68136457e111",
     "@opam/ssl": "anmonteiro/ocaml-ssl:ssl.opam#b965d15"
   }
 }

@@ -1,4 +1,4 @@
 (library
   (name httpkit)
   (public_name httpkit)
-  (libraries httpaf h2 uri))
+  (libraries httpaf h2 uri logs))

@@ -13,6 +13,7 @@ depends: [
   "httpaf-lwt-unix"
   "lwt"
   "ssl"
+  "tls"
 
   "dune" {build}
   "reason" {build}

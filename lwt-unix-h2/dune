@@ -1,4 +1,4 @@
 (library
   (name httpkit_lwt_unix_h2)
   (public_name httpkit-lwt-unix-h2)
-  (libraries httpkit h2 h2-lwt h2-lwt-unix lwt lwt.unix tls tls.lwt uri logs logs.lwt fpath bigstringaf))
+  (libraries httpkit h2 h2-lwt h2-lwt-unix lwt lwt.unix uri logs logs.lwt fpath bigstringaf))

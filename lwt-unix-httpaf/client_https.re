@@ -2,8 +2,6 @@ open Lwt.Infix;
 
 type client_security = [
   | `No_authentication
-  | `Tls_default
-  | `Tls_custom(Tls_lwt.Unix.t)
 ];
 
 let send:
@@ -69,7 +67,7 @@ let send:
 
             let request = Client_request.of_httpkit_request(req);
 
-            Httpaf_lwt_unix.Client.TLS.request(
+            Httpaf_lwt_unix.Client.SSL.request(
               ~config,
               ~error_handler,
               ~response_handler,
